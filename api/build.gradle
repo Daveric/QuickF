@@ -17,6 +17,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'com.googlecode.xades4j:xades4j:2.1.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

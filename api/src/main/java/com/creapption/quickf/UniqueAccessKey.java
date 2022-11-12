@@ -49,8 +49,7 @@ public class UniqueAccessKey {
 
     /**
      * Sets the last Verifier digit for the unique access key.
-     * @return
-     *     
+     * @return     
      */
     private static String setVerifierDigit(String accessKey){
         int sum = 0, factor = weightedCheckFactor;
@@ -91,7 +90,7 @@ public class UniqueAccessKey {
      */
     public void setIssueDate(String issueDate) {
         if (issueDate.length() != digitsForIssueDate){
-            throw new IllegalStateException(INCORRECT_LENGTH_STRING);
+            throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
         this.issueDate = issueDate;
     }
@@ -110,7 +109,7 @@ public class UniqueAccessKey {
      */
     public void setBillingType(String billingType) {
         if (billingType.length() != digitsForBillingType){
-            throw new IllegalStateException(INCORRECT_LENGTH_STRING);
+            throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
         this.billingType = billingType;
     }
@@ -129,7 +128,7 @@ public class UniqueAccessKey {
      */
     public void setRuc(String ruc) {
         if (ruc.length() != digitsForRuc){
-            throw new IllegalStateException(INCORRECT_LENGTH_STRING);
+            throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
         this.ruc = ruc;
     }
@@ -148,7 +147,7 @@ public class UniqueAccessKey {
      */
     public void setEnviromentType(String enviromentType) {
         if (enviromentType.length() != digitsForEnvType){
-            throw new IllegalStateException(INCORRECT_LENGTH_STRING);
+            throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
         this.enviromentType = enviromentType;
     }
@@ -167,7 +166,7 @@ public class UniqueAccessKey {
      */
     public void setSerie(String serie) {
         if (serie.length() != digitsForSerie){
-            throw new IllegalStateException(INCORRECT_LENGTH_STRING);
+            throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
         this.serie = serie;
     }
@@ -185,7 +184,7 @@ public class UniqueAccessKey {
      */
     public void setBillingNumber(String billingNumber) {
         if (billingNumber.length() != digitsForBillingNumber){
-            throw new IllegalStateException(INCORRECT_LENGTH_STRING);
+            throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
         this.billingNumber = billingNumber;
     }
@@ -204,7 +203,7 @@ public class UniqueAccessKey {
      */
     public void setIssueType(String issueType) {
         if (issueType.length() != digitsForIssueType){
-            throw new IllegalStateException(INCORRECT_LENGTH_STRING);
+            throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
         this.issueType = issueType;
     }
