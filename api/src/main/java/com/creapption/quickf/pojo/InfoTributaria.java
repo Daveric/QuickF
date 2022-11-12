@@ -35,6 +35,7 @@ public class InfoTributaria {
     protected String ruc;
     @XmlElement(required = true)
     protected String claveAcceso;
+    // Type of receipt
     @XmlElement(required = true)
     protected String codDoc;
     @XmlElement(required = true)
