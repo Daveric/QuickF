@@ -23,7 +23,6 @@ import xades4j.production.SignedDataObjects;
 import xades4j.production.XadesBesSigningProfile;
 import xades4j.production.XadesSigner;
 import xades4j.properties.DataObjectDesc;
-import xades4j.providers.KeyingDataProvider;
 import xades4j.providers.impl.FileSystemKeyStoreKeyingDataProvider;
 import xades4j.providers.impl.KeyStoreKeyingDataProvider;
 import xades4j.utils.DOMHelper;
@@ -45,17 +44,17 @@ public class HelloController {
     /**
      * @throws Exception
      */
-    public static void signBes() throws Exception{   
+    public static void signBes() throws Exception{
         Document doc = DocumentBuilderFactory
                 .newInstance()
                 .newDocumentBuilder()
-                .parse(new File("C:/Projects/QuickF/QuickF/api/src/main/resources/factura_without_signature.xml"));
+                .parse(new File("/Users/brayanloayza/Projects/quickf/api/src/main/resources/factura_without_signature.xml"));
         Element elem = doc.getDocumentElement();
         DOMHelper.useIdAsXmlId(elem);
 
         FileSystemKeyStoreKeyingDataProvider kp = FileSystemKeyStoreKeyingDataProvider
         .builder("pkcs12", 
-        "C:/Projects/QuickF/QuickF/api/src/main/resources/LOAYZA_BRAYAN.p12", 
+        "/Users/brayanloayza/Projects/quickf/api/src/main/resources/LOAYZA_BRAYAN.p12",
         KeyStoreKeyingDataProvider.SigningCertificateSelector.single())
         .storePassword(new DirectPasswordProvider(password))
         .entryPassword(new DirectPasswordProvider(password))
@@ -63,7 +62,7 @@ public class HelloController {
         .provider(new BouncyCastleProvider())
         .build();
 
-        DataObjectDesc obj = new DataObjectReference("#" + elem.getAttribute("Id"))
+        DataObjectDesc obj = new DataObjectReference("")
                 .withTransform(new EnvelopedSignatureTransform());
         SignedDataObjects dataObjs = new SignedDataObjects().withSignedDataObject(obj);
 
@@ -73,7 +72,7 @@ public class HelloController {
         TransformerFactory tFactory = TransformerFactory.newInstance();
         Transformer transformer = tFactory.newTransformer();
         DOMSource source = new DOMSource(doc);        
-        StreamResult result = new StreamResult(new File("C:/Projects/QuickF/QuickF/api/src/main/resources/result.xml"));
+        StreamResult result = new StreamResult(new File("/Users/brayanloayza/Projects/quickf/api/src/main/resources/result.xml"));
         transformer.transform(source, result);
     }
 }
