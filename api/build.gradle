@@ -7,7 +7,7 @@ plugins {
 
 group = 'com.creapption'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = '11'
 
 repositories {
     mavenCentral()
@@ -16,7 +16,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+    implementation group: 'org.glassfish.jaxb', name: 'jaxb-runtime', version: '2.4.0-b180830.0438'
     implementation 'com.googlecode.xades4j:xades4j:2.1.0'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
