@@ -1,12 +1,12 @@
-package com.creapption.quickf;
+package com.creapption.quickf.util;
 
 public class UniqueAccessKey {
-    //#region Constants
+    // #region Constants
     static final int weightedCheckFactor = 2;
-        //starts in 2 from the last digit and increases till 7, then starts again in 2
+    // starts in 2 from the last digit and increases till 7, then starts again in 2
     static final int limitWeightedCheckFactor = 7;
-        //starts in 2 from the last digit and increases till 7, then starts again in 2
-    static final int modul11 = 11; //the number for the module digit calculation
+    // starts in 2 from the last digit and increases till 7, then starts again in 2
+    static final int modul11 = 11; // the number for the module digit calculation
     static final int digitsForIssueDate = 8;
     static final int digitsForBillingType = 2;
     static final int digitsForRuc = 13;
@@ -15,7 +15,7 @@ public class UniqueAccessKey {
     static final int digitsForBillingNumber = 9;
     static final int digitsForIssueType = 1;
     static final String INCORRECT_LENGTH_STRING = "The property has not the correct digit length";
-    //#endregion
+    // #endregion
 
     protected String issueDate;
     protected String billingType;
@@ -30,14 +30,15 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Generates the unique access key for the cotributor given all the needed params
+     * Generates the unique access key for the cotributor given all the needed
+     * params
      *
      * @return
      */
     public String GenerateKey() {
         var codeDigits = GenerateCodeNumber();
-        String accessKey =
-            String.format("%s%s%s%s%s%s%s%s", issueDate, billingType, ruc, enviromentType, serie, billingNumber,
+        String accessKey = String.format("%s%s%s%s%s%s%s%s", issueDate, billingType, ruc, enviromentType, serie,
+                billingNumber,
                 codeDigits, issueType);
         return setVerifierDigit(accessKey);
     }
@@ -48,19 +49,20 @@ public class UniqueAccessKey {
      * @return
      */
     private String GenerateCodeNumber() {
-        //TODO: Create an algorithm to generate this code automatically
-        //for the moment this is hardcoded
+        // TODO: Create an algorithm to generate this code automatically
+        // for the moment this is hardcoded
         return "12345678";
     }
 
     /**
      * Sets the last Verifier digit for the unique access key.
-     * @return     
+     * 
+     * @return
      */
     private static String setVerifierDigit(String accessKey) {
         int sum = 0, factor = weightedCheckFactor;
         var key = accessKey.toCharArray();
-        //we start the calculation from the end
+        // we start the calculation from the end
         for (var i = key.length - 1; i > -1; i--) {
             var c = key[i];
             sum = sum + Integer.parseInt(String.valueOf(c)) * factor;
@@ -71,7 +73,7 @@ public class UniqueAccessKey {
             factor += 1;
         }
         var result = modul11 - (sum % modul11);
-        //we calculate a different digit result for 11 and 10
+        // we calculate a different digit result for 11 and 10
         if (result == 11) {
             result = 0;
         } else if (result == 10) {
@@ -80,7 +82,7 @@ public class UniqueAccessKey {
         return accessKey + result;
     }
 
-    //#regionProperties
+    // #regionProperties
 
     /**
      * Gets the issue date for the bill
@@ -226,5 +228,5 @@ public class UniqueAccessKey {
         }
         this.issueType = issueType;
     }
-    //#endregion
+    // #endregion
 }
