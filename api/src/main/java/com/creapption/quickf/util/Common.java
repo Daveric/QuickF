@@ -1,20 +1,18 @@
 package com.creapption.quickf.util;
 
 import com.creapption.quickf.pojo.Factura;
-
+import java.io.StringWriter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import java.io.StringWriter;
 
 /**
  * Define common methods.
- * */
+ */
 public class Common {
 
     public static void convertClassToXML(Factura bill) {
-        try
-        {
+        try {
             //Create JAXB Context
             JAXBContext jaxbContext = JAXBContext.newInstance(Factura.class);
             //Create Marshaller
@@ -29,11 +27,9 @@ public class Common {
 
             //Verify XML Content
             String xmlContent = sw.toString();
-            System.out.println( xmlContent );
+            System.out.println(xmlContent);
 
-        }
-        catch (JAXBException e)
-        {
+        } catch (JAXBException e) {
             e.printStackTrace();
         }
     }

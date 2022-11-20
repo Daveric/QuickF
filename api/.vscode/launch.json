@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-QuickfApplication<quickf>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "com.creapption.quickf.QuickfApplication",
+      "projectName": "quickf",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}

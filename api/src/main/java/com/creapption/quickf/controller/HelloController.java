@@ -40,7 +40,7 @@ public class HelloController {
      * @return
      */
     @RequestMapping("/")
-    public String hello() throws Exception {
+    public String hello() throws Exception {     
         signBes();
         return "Hello World!";
     }

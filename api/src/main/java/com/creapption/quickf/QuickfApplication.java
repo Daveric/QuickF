@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class QuickfApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(QuickfApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(QuickfApplication.class, args);
+    }
 
 }
