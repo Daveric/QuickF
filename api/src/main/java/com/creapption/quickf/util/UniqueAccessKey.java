@@ -1,5 +1,7 @@
 package com.creapption.quickf.util;
 
+import java.util.Random;
+
 public class UniqueAccessKey {
     // #region Constants
     static final int weightedCheckFactor = 2;
@@ -49,9 +51,18 @@ public class UniqueAccessKey {
      * @return
      */
     private String GenerateCodeNumber() {
-        // TODO: Create an algorithm to generate this code automatically
-        // for the moment this is hardcoded
-        return "12345678";
+        return GenerateRandomNumber(8);
+    }
+
+    /**
+     * Generates a random number given the digit length
+     * @param charLength
+     * @return
+     */
+    private String GenerateRandomNumber(int charLength) {
+        return String.valueOf(charLength < 1 ? 0 : new Random()
+                .nextInt((9 * (int) Math.pow(10, charLength - 1)) - 1)
+                + (int) Math.pow(10, charLength - 1));
     }
 
     /**
@@ -94,7 +105,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the issue date for the bill
+     * Sets the issue date for the bill (8 digits)
      *
      * @param issueDate
      */
@@ -115,7 +126,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the billing type
+     * Sets the billing type (2 digits)
      *
      * @param billingType
      */
@@ -136,7 +147,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the RUC for the contributor
+     * Sets the RUC for the contributor (13 digits)
      *
      * @param ruc
      */
@@ -157,7 +168,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the enviroment type (production or testing)
+     * Sets the enviroment type (production or testing) (1 digit)
      *
      * @param enviromentType
      */
@@ -178,7 +189,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the serie for the bill
+     * Sets the serie for the bill (6 digits)
      *
      * @param serie
      */
@@ -197,7 +208,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the billing number
+     * Sets the billing number (9 digits)
      *
      * @param billingNumber
      */
@@ -218,7 +229,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the type of emission for the bill
+     * Sets the type of emission for the bill (1 digit)
      *
      * @param issueType
      */

@@ -41,13 +41,13 @@ public class HelloController {
     private String TestingUniqueAccessKey() {
         var accessKey = new UniqueAccessKey();
         try {
-            accessKey.setBillingNumber("");
-            accessKey.setBillingType("1");
-            accessKey.setEnviromentType("2");
-            accessKey.setIssueDate("");
-            accessKey.setIssueType("");
-            accessKey.setRuc("");
-            accessKey.setSerie("");
+            accessKey.setBillingNumber("123456789");
+            accessKey.setBillingType("01");
+            accessKey.setEnviromentType("1");
+            accessKey.setIssueDate("11232022");
+            accessKey.setIssueType("1");
+            accessKey.setRuc("0704437664001");
+            accessKey.setSerie("000010");
 
             return accessKey.GenerateKey();
         } catch (Exception e) {
