@@ -22,22 +22,42 @@ import xades4j.providers.impl.KeyStoreKeyingDataProvider;
 import xades4j.utils.DOMHelper;
 import java.io.OutputStream;
 import java.io.StringReader;
-import java.nio.file.Paths;
 
 import org.w3c.dom.Node;
 
 public class XadesSignDoc {
-    private static final String password = "Loayzaq2022*";
-    private static final String pathToFilePlaceholder = "%sapi%ssrc%smain%sresources%s";
-    private final static String path = String.format("%s%s", Paths.get("").toAbsolutePath(),
-            String.format(pathToFilePlaceholder, File.separator,
-                    File.separator, File.separator,
-                    File.separator, File.separator));
+    // #region Constants
+    private static final String KEYSTORETYPE_STRING = "pkcs12";
+    // #endregion
+
+    // #region Properties
+    protected static String xmlFile;
+    protected static String keyStorePath;
+    protected static String password;
+    // #endregion
 
     /**
+     * Constructor XadesSignDoc - Signing documents with Xades method.
+     * Currently Bes method only supported
+     * 
+     * @param signaturePath
+     * @param signaturePassword
+     * @param xmlToSign
+     */
+    public XadesSignDoc(String signaturePath, String signaturePassword, String xmltoSign) {
+        super();
+        xmlFile = xmltoSign;
+        keyStorePath = signaturePath;
+        password = signaturePassword;
+    }
+
+    /**
+     * Sign xml documents with XadesBes method
+     * 
      * @throws Exception
      */
-    public static void signBes(String xmlFile) throws Exception {
+    public void signBes(String outputFile) throws Exception {
+        // Transforming the xmlFile string into Element
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         InputSource is = new InputSource(new StringReader(xmlFile));
@@ -45,23 +65,33 @@ public class XadesSignDoc {
         Element elem = doc.getDocumentElement();
         DOMHelper.useIdAsXmlId(elem);
 
+        // getting the sign for certificate or .p12 file
         FileSystemKeyStoreKeyingDataProvider kp = FileSystemKeyStoreKeyingDataProvider
-                .builder("pkcs12", path + "LOAYZA_BRAYAN.p12",
+                .builder(KEYSTORETYPE_STRING, keyStorePath,
                         KeyStoreKeyingDataProvider.SigningCertificateSelector.single())
                 .storePassword(new DirectPasswordProvider(password))
                 .entryPassword(new DirectPasswordProvider(password))
                 .fullChain(true)
                 .build();
 
+        // init the signer
         XadesSigner signer = new XadesBesSigningProfile(kp)
                 .withBasicSignatureOptions(new BasicSignatureOptions().includePublicKey(true)).newSigner();
         new Enveloped(signer).sign(elem);
 
-        outputDocument(doc, "document.signed.bes.ec.xml");
+        // generates the signed doc
+        outputDocument(doc, outputFile);
     }
 
+    /**
+     * Generates an output xml file with a specific fileName
+     * 
+     * @param doc
+     * @param fileName
+     * @throws Exception
+     */
     protected static void outputDocument(Document doc, String fileName) throws Exception {
-        File outDir = ensureOutputDir();
+        File outDir = ensureOutputDir(fileName);
         FileOutputStream out = new FileOutputStream(new File(outDir, fileName));
         try {
             outputDOM(doc, out);
@@ -70,6 +100,13 @@ public class XadesSignDoc {
         }
     }
 
+    /**
+     * Executes the transformer from doc to OutputStream
+     * 
+     * @param dom
+     * @param os
+     * @throws Exception
+     */
     protected static void outputDOM(Node dom, OutputStream os) throws Exception {
         TransformerFactory tf = TransformerFactory.newInstance();
         tf.newTransformer().transform(
@@ -77,8 +114,13 @@ public class XadesSignDoc {
                 new StreamResult(os));
     }
 
-    private static File ensureOutputDir() {
-        File dir = new File(path);
+    /**
+     * Method to ensure that path dir Exists
+     * 
+     * @return
+     */
+    private static File ensureOutputDir(String fileName) {
+        File dir = new File(fileName);
         dir.mkdir();
         return dir;
     }
