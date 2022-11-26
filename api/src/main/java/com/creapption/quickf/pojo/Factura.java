@@ -1,9 +1,12 @@
 
 package com.creapption.quickf.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.xml.bind.annotation.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -974,6 +977,9 @@ public class Factura {
 
         @XmlElement(required = true)
         protected String fechaEmision;
+        @XmlTransient
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT-5")
+        protected Date fechaHoraEmision;
         protected String dirEstablecimiento;
         protected String contribuyenteEspecial;
         @XmlSchemaType(name = "string")
@@ -1040,9 +1046,13 @@ public class Factura {
          *     {@link String }
          *     
          */
-        public void setFechaEmision(String value) {
-            this.fechaEmision = value;
+        public void setFechaEmision(String value) { this.fechaEmision = value; }
+
+        public Date getFechaHoraEmision() {
+            return fechaHoraEmision;
         }
+
+        public void setFechaHoraEmision(Date value){ this.fechaHoraEmision = value; }
 
         /**
          * Gets the value of the dirEstablecimiento property.

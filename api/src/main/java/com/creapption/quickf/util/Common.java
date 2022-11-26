@@ -2,6 +2,8 @@ package com.creapption.quickf.util;
 
 import com.creapption.quickf.pojo.Factura;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -11,7 +13,7 @@ import javax.xml.bind.Marshaller;
  */
 public class Common {
 
-    public static void convertClassToXML(Factura bill) {
+    public static String convertClassToXML(Factura bill) {
         try {
             //Create JAXB Context
             JAXBContext jaxbContext = JAXBContext.newInstance(Factura.class);
@@ -28,9 +30,16 @@ public class Common {
             //Verify XML Content
             String xmlContent = sw.toString();
             System.out.println(xmlContent);
+            return xmlContent;
 
         } catch (JAXBException e) {
             e.printStackTrace();
+            return e.getMessage();
         }
+    }
+
+    public static String dateFormat(Date date, String pattern) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
+        return dateFormat.format(date);
     }
 }

@@ -16,6 +16,7 @@ public class UniqueAccessKey {
     static final int digitsForSerie = 6;
     static final int digitsForBillingNumber = 9;
     static final int digitsForIssueType = 1;
+    static final int digitsForUniqueCode = 8;
     static final String INCORRECT_LENGTH_STRING = "The property has not the correct digit length";
     // #endregion
 
@@ -24,7 +25,7 @@ public class UniqueAccessKey {
     protected String ruc;
     protected String enviromentType;
     protected String serie;
-    protected String billingNumber;
+    protected String billingSequential;
     protected String issueType;
 
     public UniqueAccessKey() {
@@ -37,10 +38,10 @@ public class UniqueAccessKey {
      *
      * @return
      */
-    public String GenerateKey() {
-        var codeDigits = GenerateCodeNumber();
+    public String generateKey() {
+        var codeDigits = generateCodeNumber();
         String accessKey = String.format("%s%s%s%s%s%s%s%s", issueDate, billingType, ruc, enviromentType, serie,
-                billingNumber,
+                billingSequential,
                 codeDigits, issueType);
         return setVerifierDigit(accessKey);
     }
@@ -50,19 +51,10 @@ public class UniqueAccessKey {
      *
      * @return
      */
-    private String GenerateCodeNumber() {
-        return GenerateRandomNumber(8);
-    }
-
-    /**
-     * Generates a random number given the digit length
-     * @param charLength
-     * @return
-     */
-    private String GenerateRandomNumber(int charLength) {
-        return String.valueOf(charLength < 1 ? 0 : new Random()
-                .nextInt((9 * (int) Math.pow(10, charLength - 1)) - 1)
-                + (int) Math.pow(10, charLength - 1));
+    private String generateCodeNumber() {
+        return String.valueOf(digitsForUniqueCode < 1 ? 0 : new Random()
+                .nextInt((9 * (int) Math.pow(10, digitsForUniqueCode - 1)) - 1)
+                + (int) Math.pow(10, digitsForUniqueCode - 1));
     }
 
     /**
@@ -190,6 +182,7 @@ public class UniqueAccessKey {
 
     /**
      * Sets the serie for the bill (6 digits)
+     * branch of the stab
      *
      * @param serie
      */
@@ -203,20 +196,20 @@ public class UniqueAccessKey {
     /**
      * Gets the billing number
      */
-    public String getBillingNumber() {
-        return billingNumber;
+    public String getBillingSequential() {
+        return billingSequential;
     }
 
     /**
      * Sets the billing number (9 digits)
      *
-     * @param billingNumber
+     * @param billingSequential
      */
-    public void setBillingNumber(String billingNumber) {
-        if (billingNumber.length() != digitsForBillingNumber) {
+    public void setBillingSequential(String billingSequential) {
+        if (billingSequential.length() != digitsForBillingNumber) {
             throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
-        this.billingNumber = billingNumber;
+        this.billingSequential = billingSequential;
     }
 
     /**

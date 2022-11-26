@@ -6,11 +6,13 @@ import org.w3c.dom.Element;
 import java.io.File;
 import java.io.FileOutputStream;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.xml.sax.InputSource;
 import xades4j.production.BasicSignatureOptions;
 import xades4j.production.Enveloped;
 import xades4j.production.XadesBesSigningProfile;
@@ -19,6 +21,7 @@ import xades4j.providers.impl.FileSystemKeyStoreKeyingDataProvider;
 import xades4j.providers.impl.KeyStoreKeyingDataProvider;
 import xades4j.utils.DOMHelper;
 import java.io.OutputStream;
+import java.io.StringReader;
 import java.nio.file.Paths;
 
 import org.w3c.dom.Node;
@@ -34,11 +37,11 @@ public class XadesSignDoc {
     /**
      * @throws Exception
      */
-    public void signBes() throws Exception {
-        Document doc = DocumentBuilderFactory
-                .newInstance()
-                .newDocumentBuilder()
-                .parse(new File(path + "factura_without_signature.xml"));
+    public static void signBes(String xmlFile) throws Exception {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        InputSource is = new InputSource(new StringReader(xmlFile));
+        Document doc = builder.parse(is);
         Element elem = doc.getDocumentElement();
         DOMHelper.useIdAsXmlId(elem);
 

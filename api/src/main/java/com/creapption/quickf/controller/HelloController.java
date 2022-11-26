@@ -1,15 +1,13 @@
 package com.creapption.quickf.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.creapption.quickf.util.UniqueAccessKey;
 import com.creapption.quickf.util.XadesSignDoc;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HelloController {
     /**
-     * 
      * @return
      */
     @RequestMapping("/")
@@ -20,28 +18,28 @@ public class HelloController {
 
     /**
      * Testing Doc signning
-     * 
+     *
      * @return
      */
     private String TestingXadesSignDoc() {
-        var signDoc = new XadesSignDoc();
         try {
-            signDoc.signBes();
+            XadesSignDoc.signBes("");
             return "Success";
         } catch (Exception e) {
+            System.out.println("Exception:" + e);
             return "Exception while signing";
         }
     }
 
     /**
      * Testing UniqueAccessKey, with this examples the result is always an exception
-     * 
+     *
      * @return
      */
     private String TestingUniqueAccessKey() {
         var accessKey = new UniqueAccessKey();
         try {
-            accessKey.setBillingNumber("123456789");
+            accessKey.setBillingSequential("123456789");
             accessKey.setBillingType("01");
             accessKey.setEnviromentType("1");
             accessKey.setIssueDate("11232022");
@@ -49,7 +47,7 @@ public class HelloController {
             accessKey.setRuc("0704437664001");
             accessKey.setSerie("000010");
 
-            return accessKey.GenerateKey();
+            return accessKey.generateKey();
         } catch (Exception e) {
             return e.getMessage();
         }
