@@ -1,11 +1,13 @@
 package com.creapption.quickf.util;
 
+import java.util.Random;
+
+import com.creapption.quickf.pojo.Factura;
+
 public class UniqueAccessKey {
     // #region Constants
     static final int weightedCheckFactor = 2;
-    // starts in 2 from the last digit and increases till 7, then starts again in 2
     static final int limitWeightedCheckFactor = 7;
-    // starts in 2 from the last digit and increases till 7, then starts again in 2
     static final int modul11 = 11; // the number for the module digit calculation
     static final int digitsForIssueDate = 8;
     static final int digitsForBillingType = 2;
@@ -14,7 +16,8 @@ public class UniqueAccessKey {
     static final int digitsForSerie = 6;
     static final int digitsForBillingNumber = 9;
     static final int digitsForIssueType = 1;
-    static final String INCORRECT_LENGTH_STRING = "The property has not the correct digit length";
+    static final int digitsForUniqueCode = 8;
+    static final String INCORRECT_LENGTH_STRING = "The property has not the correct digit length!";
     // #endregion
 
     protected String issueDate;
@@ -22,42 +25,59 @@ public class UniqueAccessKey {
     protected String ruc;
     protected String enviromentType;
     protected String serie;
-    protected String billingNumber;
+    protected String billingSequential;
     protected String issueType;
 
-    public UniqueAccessKey() {
+    /**
+     * Constructor for UniqueAccessKey
+     * 
+     * @param bill
+     */
+    public UniqueAccessKey(Factura bill) {
         super();
+
+        // fixing date format in issueDate for key generation
+        String issueDate = bill.getInfoFactura().getFechaEmision().replace("/", "");
+
+        // init all the required properties
+        setIssueDate(issueDate);
+        setBillingType(bill.getInfoTributaria().getCodDoc());
+        setRuc(bill.getInfoTributaria().getRuc());
+        setEnviromentType(bill.getInfoTributaria().getAmbiente());
+        setSerie(bill.getInfoTributaria().getEstab() + bill.getInfoTributaria().getPtoEmi());
+        setBillingSequential(bill.getInfoTributaria().getSecuencial());
+        setIssueType(Environment.TYPE_ENVIRONMENT);
     }
 
     /**
-     * Generates the unique access key for the cotributor given all the needed
+     * Generates the unique access key for the contributor given all the needed
      * params
      *
-     * @return
+     * @return String
      */
-    public String GenerateKey() {
-        var codeDigits = GenerateCodeNumber();
+    public String generateKey() {
+        //calculating the unique codeNumber for bills (radom number of 8 digits)
+        var codeNumberForBill = generateCodeNumber();
         String accessKey = String.format("%s%s%s%s%s%s%s%s", issueDate, billingType, ruc, enviromentType, serie,
-                billingNumber,
-                codeDigits, issueType);
+                billingSequential, codeNumberForBill, issueType);
         return setVerifierDigit(accessKey);
     }
 
     /**
      * Generates a unique secure 8 digits code for the contributor
      *
-     * @return
+     * @return String
      */
-    private String GenerateCodeNumber() {
-        // TODO: Create an algorithm to generate this code automatically
-        // for the moment this is hardcoded
-        return "12345678";
+    private String generateCodeNumber() {
+        return String.valueOf(new Random()
+                .nextInt((9 * (int) Math.pow(10, digitsForUniqueCode - 1)) - 1)
+                + (int) Math.pow(10, digitsForUniqueCode - 1));
     }
 
     /**
      * Sets the last Verifier digit for the unique access key.
      * 
-     * @return
+     * @return 
      */
     private static String setVerifierDigit(String accessKey) {
         int sum = 0, factor = weightedCheckFactor;
@@ -94,7 +114,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the issue date for the bill
+     * Sets the issue date for the bill (8 digits)
      *
      * @param issueDate
      */
@@ -115,7 +135,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the billing type
+     * Sets the billing type (2 digits)
      *
      * @param billingType
      */
@@ -136,7 +156,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the RUC for the contributor
+     * Sets the RUC for the contributor (13 digits)
      *
      * @param ruc
      */
@@ -157,7 +177,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the enviroment type (production or testing)
+     * Sets the enviroment type (production or testing) (1 digit)
      *
      * @param enviromentType
      */
@@ -178,7 +198,8 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the serie for the bill
+     * Sets the serie for the bill (6 digits)
+     * branch of the stab
      *
      * @param serie
      */
@@ -192,20 +213,20 @@ public class UniqueAccessKey {
     /**
      * Gets the billing number
      */
-    public String getBillingNumber() {
-        return billingNumber;
+    public String getBillingSequential() {
+        return billingSequential;
     }
 
     /**
-     * Sets the billing number
+     * Sets the billing number (9 digits)
      *
-     * @param billingNumber
+     * @param billingSequential
      */
-    public void setBillingNumber(String billingNumber) {
-        if (billingNumber.length() != digitsForBillingNumber) {
+    public void setBillingSequential(String billingSequential) {
+        if (billingSequential.length() != digitsForBillingNumber) {
             throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
-        this.billingNumber = billingNumber;
+        this.billingSequential = billingSequential;
     }
 
     /**
@@ -218,7 +239,7 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Sets the type of emission for the bill
+     * Sets the type of emission for the bill (1 digit)
      *
      * @param issueType
      */
