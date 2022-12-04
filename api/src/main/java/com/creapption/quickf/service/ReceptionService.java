@@ -35,7 +35,7 @@ public class ReceptionService {
         var xadesBes = new XadesSignDoc(path + "LOAYZA_BRAYAN.p12", password, xmlFileToSign);
         try {
             // sign the xml and save into a file
-            xadesBes.signBes(path + "document.signed.bes.xml");
+            xadesBes.signBes(path + "document.xml");
 
             return "Document signed and saved!";
         } catch (Exception e) {
