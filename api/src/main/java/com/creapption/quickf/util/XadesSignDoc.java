@@ -56,7 +56,7 @@ public class XadesSignDoc {
      * 
      * @throws Exception
      */
-    public void signBes(String outputFile) throws Exception {
+    public void signBes(String outputPathFile) throws Exception {
         // Transforming the xmlFile string into Element
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -80,19 +80,18 @@ public class XadesSignDoc {
         new Enveloped(signer).sign(elem);
 
         // generates the signed doc
-        outputDocument(doc, outputFile);
+        outputDocument(doc, outputPathFile);
     }
 
     /**
-     * Generates an output xml file with a specific fileName
+     * Generates an output xml file with a specific pathFileName
      * 
      * @param doc
-     * @param fileName
+     * @param pathFileName
      * @throws Exception
      */
-    protected static void outputDocument(Document doc, String fileName) throws Exception {
-        File outDir = ensureOutputDir(fileName);
-        FileOutputStream out = new FileOutputStream(new File(outDir, fileName));
+    protected static void outputDocument(Document doc, String pathFileName) throws Exception {
+        FileOutputStream out = new FileOutputStream(new File(pathFileName));
         try {
             outputDOM(doc, out);
         } finally {
@@ -112,16 +111,5 @@ public class XadesSignDoc {
         tf.newTransformer().transform(
                 new DOMSource(dom),
                 new StreamResult(os));
-    }
-
-    /**
-     * Method to ensure that path dir Exists
-     * 
-     * @return
-     */
-    private static File ensureOutputDir(String fileName) {
-        File dir = new File(fileName);
-        dir.mkdir();
-        return dir;
     }
 }
