@@ -2,27 +2,37 @@ package com.creapption.quickf.service;
 
 import com.creapption.quickf.pojo.Factura;
 import com.creapption.quickf.util.Common;
+import com.creapption.quickf.util.OSValidator;
 import com.creapption.quickf.util.UniqueAccessKey;
 import com.creapption.quickf.util.XadesSignDoc;
 
 import java.io.File;
 import java.nio.file.Paths;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service("receptionService")
-public class ReceptionService {
-
-    private static final String password = "Loayzaq2022*";
-    private static final String pathToFilePlaceholder = "%sapi%ssrc%smain%sresources%s";
-    private final static String path = String.format("%s%s", Paths.get("").toAbsolutePath(),
+public class ReceptionService {  
+    private static String pathToFilePlaceholder = OSValidator.isWindows()?"%sapi%ssrc%smain%sresources%s":"%ssrc%smain%sresources%s";
+    private static String path = String.format("%s%s", Paths.get("").toAbsolutePath(),
             String.format(pathToFilePlaceholder, File.separator,
                     File.separator, File.separator,
-                    File.separator, File.separator));
+                    File.separator, File.separator));   
+    
+    @Value("${BILL_ENVIROMENT_TYPE}")
+    private String billEnviromentType;
 
-    public String sendBillToReception(Factura bill) {
+    @Value("${SIGNFILENAME}")
+    private String signFileName;
+
+    /**
+     * Sending Bill to Reception
+     */
+    public String sendBillToReception(Factura bill, String password) {
         // calculating Unique access key from bill
         var accessKey = new UniqueAccessKey(bill);
+        accessKey.setIssueType(billEnviromentType);
         String uniqueAccessKey = accessKey.generateKey();
 
         // setting the unique access key to the bill itself
@@ -32,7 +42,7 @@ public class ReceptionService {
         var xmlFileToSign = Common.convertClassToXML(bill);
 
         //initiliaze the signer XadesSignDoc
-        var xadesBes = new XadesSignDoc(path + "LOAYZA_BRAYAN.p12", password, xmlFileToSign);
+        var xadesBes = new XadesSignDoc(path + signFileName, password, xmlFileToSign);
         try {
             // sign the xml and save into a file
             xadesBes.signBes(path + "document.xml");
