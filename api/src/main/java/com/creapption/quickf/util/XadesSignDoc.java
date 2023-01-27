@@ -3,9 +3,9 @@ package com.creapption.quickf.util;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.*;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.TransformerFactory;
@@ -20,12 +20,14 @@ import xades4j.production.XadesSigner;
 import xades4j.providers.impl.FileSystemKeyStoreKeyingDataProvider;
 import xades4j.providers.impl.KeyStoreKeyingDataProvider;
 import xades4j.utils.DOMHelper;
-import java.io.OutputStream;
-import java.io.StringReader;
 
 import org.w3c.dom.Node;
 
 public class XadesSignDoc {
+    static {
+        System.setProperty("org.apache.xml.security.ignoreLineBreaks", "true");
+        org.apache.xml.security.Init.init();
+    }
     // #region Constants
     private static final String KEYSTORETYPE_STRING = "pkcs12";
     // #endregion
@@ -56,7 +58,7 @@ public class XadesSignDoc {
      * 
      * @throws Exception
      */
-    public void signBes(String outputPathFile) throws Exception {
+    public String signBes(String outputPathFile) throws Exception {
         // Transforming the xmlFile string into Element
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -81,6 +83,7 @@ public class XadesSignDoc {
 
         // generates the signed doc
         outputDocument(doc, outputPathFile);
+        return transformFileToByte(doc);
     }
 
     /**
@@ -91,7 +94,7 @@ public class XadesSignDoc {
      * @throws Exception
      */
     protected static void outputDocument(Document doc, String pathFileName) throws Exception {
-        FileOutputStream out = new FileOutputStream(new File(pathFileName));
+        FileOutputStream out = new FileOutputStream(pathFileName);
         try {
             outputDOM(doc, out);
         } finally {
@@ -111,5 +114,13 @@ public class XadesSignDoc {
         tf.newTransformer().transform(
                 new DOMSource(dom),
                 new StreamResult(os));
+    }
+
+    protected static String transformFileToByte(Node document) throws Exception {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        StreamResult result = new StreamResult(bos);
+        TransformerFactory tf = TransformerFactory.newInstance();
+        tf.newTransformer().transform(new DOMSource(document), result);
+        return DatatypeConverter.printBase64Binary(bos.toByteArray());
     }
 }
