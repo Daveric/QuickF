@@ -2,16 +2,7 @@ package com.creapption.quickf.util;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-import java.io.*;
-
-import javax.xml.bind.DatatypeConverter;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
+import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
 import xades4j.production.BasicSignatureOptions;
 import xades4j.production.Enveloped;
@@ -21,7 +12,16 @@ import xades4j.providers.impl.FileSystemKeyStoreKeyingDataProvider;
 import xades4j.providers.impl.KeyStoreKeyingDataProvider;
 import xades4j.utils.DOMHelper;
 
-import org.w3c.dom.Node;
+import javax.xml.bind.DatatypeConverter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.StringReader;
 
 public class XadesSignDoc {
     static {
@@ -44,7 +44,7 @@ public class XadesSignDoc {
      * 
      * @param signaturePath
      * @param signaturePassword
-     * @param xmlToSign
+     * @param xmltoSign
      */
     public XadesSignDoc(String signaturePath, String signaturePassword, String xmltoSign) {
         super();

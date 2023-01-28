@@ -4,20 +4,18 @@ import com.creapption.quickf.pojo.Factura;
 import com.creapption.quickf.util.Common;
 import com.creapption.quickf.util.UniqueAccessKey;
 import com.creapption.quickf.util.XadesSignDoc;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.nio.file.Paths;
-
-import org.springframework.stereotype.Service;
 
 @Service("receptionService")
 public class ReceptionService {
 
     private static final String password = "Loayzaq2022*";
-    private static final String pathToFilePlaceholder = "%sapi%ssrc%smain%sresources%s";
+    private static final String pathToFilePlaceholder = "%ssrc%smain%sresources%s";
     private final static String path = String.format("%s%s", Paths.get("").toAbsolutePath(),
-            String.format(pathToFilePlaceholder, File.separator,
-                    File.separator, File.separator,
+            String.format(pathToFilePlaceholder, File.separator, File.separator,
                     File.separator, File.separator));
 
     public String sendBillToReception(Factura bill) {
@@ -36,7 +34,7 @@ public class ReceptionService {
         try {
             // sign the xml and save into a file
             // xadesBes.signBes(path + "document.xml");
-            String fileSigned = xadesBes.signBes(path + "document.xml");
+            String fileSigned = xadesBes.signBes(path + "document1.xml");
             System.out.println("fileSigned:" + fileSigned);
 
             return "Document signed and saved!";
