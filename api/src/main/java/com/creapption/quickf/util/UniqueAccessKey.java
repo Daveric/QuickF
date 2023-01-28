@@ -46,7 +46,6 @@ public class UniqueAccessKey {
         setEnviromentType(bill.getInfoTributaria().getAmbiente());
         setSerie(bill.getInfoTributaria().getEstab() + bill.getInfoTributaria().getPtoEmi());
         setBillingSequential(bill.getInfoTributaria().getSecuencial());
-        setIssueType(Environment.TYPE_ENVIRONMENT);
     }
 
     /**
@@ -55,7 +54,7 @@ public class UniqueAccessKey {
      *
      * @return String
      */
-    public String generateKey() {
+    public String generateKey() {        
         //calculating the unique codeNumber for bills (radom number of 8 digits)
         var codeNumberForBill = generateCodeNumber();
         String accessKey = String.format("%s%s%s%s%s%s%s%s", issueDate, billingType, ruc, enviromentType, serie,
