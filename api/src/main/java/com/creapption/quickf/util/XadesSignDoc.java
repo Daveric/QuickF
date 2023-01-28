@@ -67,7 +67,7 @@ public class XadesSignDoc {
         Element elem = doc.getDocumentElement();
         DOMHelper.useIdAsXmlId(elem);
 
-        // getting the sign for certificate or .p12 file
+        /*// getting the sign for certificate or .p12 file
         FileSystemKeyStoreKeyingDataProvider kp = FileSystemKeyStoreKeyingDataProvider
                 .builder(KEYSTORETYPE_STRING, keyStorePath,
                         KeyStoreKeyingDataProvider.SigningCertificateSelector.single())
@@ -79,7 +79,7 @@ public class XadesSignDoc {
         // init the signer
         XadesSigner signer = new XadesBesSigningProfile(kp)
                 .withBasicSignatureOptions(new BasicSignatureOptions().includePublicKey(true)).newSigner();
-        new Enveloped(signer).sign(elem);
+        new Enveloped(signer).sign(elem);*/
 
         // generates the signed doc
         outputDocument(doc, outputPathFile);

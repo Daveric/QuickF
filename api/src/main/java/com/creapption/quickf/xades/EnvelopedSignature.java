@@ -45,7 +45,7 @@ public class EnvelopedSignature extends GenericXMLSignature {
     /**
      * Recurso a firmar
      */
-    private final static String RESOURCE_TO_SIGN = "/examples/ExampleToSign.xml";
+    private final static String RESOURCE_TO_SIGN = "/document.xml";
 
     /**
      * <p>
@@ -62,7 +62,7 @@ public class EnvelopedSignature extends GenericXMLSignature {
      * @param args
      *            Argumentos del programa
      */
-    public static void main(String[] args) {
+    public static void main() {
         EnvelopedSignature signature = new EnvelopedSignature();
         signature.execute();
 

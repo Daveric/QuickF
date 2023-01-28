@@ -5,6 +5,7 @@ import com.creapption.quickf.util.Common;
 import com.creapption.quickf.util.OSValidator;
 import com.creapption.quickf.util.UniqueAccessKey;
 import com.creapption.quickf.util.XadesSignDoc;
+import com.creapption.quickf.xades.EnvelopedSignature;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -47,7 +48,8 @@ public class ReceptionService {
         try {
             // sign the xml and save into a file
             // xadesBes.signBes(path + "document.xml");
-            String fileSigned = xadesBes.signBes(path + "document1.xml");
+            String fileSigned = xadesBes.signBes(path + "document.xml");
+            EnvelopedSignature.main();
             System.out.println("fileSigned:" + fileSigned);
 
             return "Document signed and saved!";
