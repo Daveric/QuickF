@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><factura id="comprobante" version="1.0.0">
+    <infoTributaria>
+        <ambiente>1</ambiente>
+        <tipoEmision>1</tipoEmision>
+        <razonSocial>Brayan Omar Loayza Quito</razonSocial>
+        <nombreComercial>Brayan Omar Loayza Quito</nombreComercial>
+        <ruc>0705867794001</ruc>
+        <claveAcceso>2901202301070586779400110010040000000821234231419</claveAcceso>
+        <codDoc>01</codDoc>
+        <estab>001</estab>
+        <ptoEmi>004</ptoEmi>
+        <secuencial>000000082</secuencial>
+        <dirMatriz>14ava Sur e Decima Oeste</dirMatriz>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>29/01/2023</fechaEmision>
+        <dirEstablecimiento>Amazonas N21-147 y Roca</dirEstablecimiento>
+        <obligadoContabilidad>SI</obligadoContabilidad>
+        <tipoIdentificacionComprador>04</tipoIdentificacionComprador>
+        <razonSocialComprador>Mushroomsoft S.A</razonSocialComprador>
+        <identificacionComprador>1792303990001</identificacionComprador>
+        <direccionComprador>Amazonas N21-147 y Roca</direccionComprador>
+        <totalSinImpuestos>2500.00</totalSinImpuestos>
+        <totalDescuento>0.00</totalDescuento>
+        <totalConImpuestos>
+            <totalImpuesto>
+                <codigo>2</codigo>
+                <codigoPorcentaje>2</codigoPorcentaje>
+                <baseImponible>2500.00</baseImponible>
+                <valor>300.00</valor>
+            </totalImpuesto>
+        </totalConImpuestos>
+        <propina>0.00</propina>
+        <importeTotal>2800.00</importeTotal>
+        <moneda>DOLAR</moneda>
+        <pagos>
+            <pago>
+                <formaPago>20</formaPago>
+                <total>2800.00</total>
+            </pago>
+        </pagos>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <descripcion>Servicios Profesionales Enero</descripcion>
+            <cantidad>1</cantidad>
+            <precioUnitario>2500.00</precioUnitario>
+            <descuento>0.00</descuento>
+            <precioTotalSinImpuesto>2500.00</precioTotalSinImpuesto>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>2</codigoPorcentaje>
+                    <tarifa>12.00</tarifa>
+                    <baseImponible>2500.00</baseImponible>
+                    <valor>300.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+</factura>

@@ -14,7 +14,7 @@
  * SIN GARANTÍAS NI CONDICIONES DE NINGÚN TIPO, ni expresas ni implícitas.
  * Véase la Licencia en el idioma concreto que rige los permisos y limitaciones que establece la Licencia.
  */
-package com.creapption.quickf.xades;
+package com.creapption.quickf.xades.keyStore;
 
 import es.mityc.javasign.pkstore.IPassStoreKS;
 

@@ -1,12 +1,15 @@
 package com.creapption.quickf.xades;
 
+import com.creapption.quickf.xades.keyStore.PassStoreKS;
 import es.mityc.firmaJava.libreria.utilidades.UtilidadTratarNodo;
 import es.mityc.firmaJava.libreria.xades.DataToSign;
 import es.mityc.firmaJava.libreria.xades.FirmaXML;
 import es.mityc.javasign.pkstore.CertStoreException;
 import es.mityc.javasign.pkstore.IPKStoreManager;
 import es.mityc.javasign.pkstore.keystore.KSStore;
+import org.apache.commons.codec.binary.Base64;
 import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,290 +23,207 @@ import java.io.*;
 import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-/**
- * <p>
- * Clase base que deberían extender los diferentes ejemplos para realizar firmas
- * XML.
- * </p>
- */
 public abstract class GenericXMLSignature {
+    public static String PKCS12_RESOURCE = "/LOAYZA_BRAYAN.p12";
+    public static String PKCS12_PASSWORD = "Loayzaq2022*";
+    public static final String OUTPUT_DIRECTORY = ".";
 
-    /**
-     * <p>
-     * Almacén PKCS12 con el que se desea realizar la firma
-     * </p>
-     */
-    public final static String PKCS12_RESOURCE = "/LOAYZA_BRAYAN.p12";
+    public GenericXMLSignature(String pkcs12, String pkcs12_password) {
+        byte[] decoded_firma = Base64.decodeBase64(pkcs12.getBytes());
+        String decodedString_firma = new String(decoded_firma);
+        InputStream arch = null;
 
-    /**
-     * <p>
-     * Constraseña de acceso a la clave privada del usuario
-     * </p>
-     */
-    public final static String PKCS12_PASSWORD = "Loayzaq2022*";
-
-    /**
-     * <p>
-     * Directorio donde se almacenará el resultado de la firma
-     * </p>
-     */
-    public final static String OUTPUT_DIRECTORY = ".";
-
-    /**
-     * <p>
-     * Ejecución del ejemplo. La ejecución consistirá en la firma de los datos
-     * creados por el método abstracto <code>createDataToSign</code> mediante el
-     * certificado declarado en la constante <code>PKCS12_FILE</code>. El
-     * resultado del proceso de firma será almacenado en un fichero XML en el
-     * directorio correspondiente a la constante <code>OUTPUT_DIRECTORY</code>
-     * del usuario bajo el nombre devuelto por el método abstracto
-     * <code>getSignFileName</code>
-     * </p>
-     */
-    protected void execute() {
-
-        // Obtencion del gestor de claves
-        IPKStoreManager storeManager = getPKStoreManager();
-        if (storeManager == null) {
-            System.err.println("El gestor de claves no se ha obtenido correctamente.");
-            return;
-        }
-
-        // Obtencion del certificado para firmar. Utilizaremos el primer
-        // certificado del almacen.
-        X509Certificate certificate = getFirstCertificate(storeManager);
-        if (certificate == null) {
-            System.err.println("No existe ningún certificado para firmar.");
-            return;
-        }
-
-        // Obtención de la clave privada asociada al certificado
-        PrivateKey privateKey;
         try {
-            privateKey = storeManager.getPrivateKey(certificate);
-        } catch (CertStoreException e) {
-            System.err.println("Error al acceder al almacén.");
-            return;
+            arch = new FileInputStream(decodedString_firma);
+        } catch (FileNotFoundException var8) {
+            Logger.getLogger(com.creapption.quickf.xades.GenericXMLSignature.class.getName()).log(Level.SEVERE, (String)null, var8);
         }
 
-        // Obtención del provider encargado de las labores criptográficas
-        Provider provider = storeManager.getProvider(certificate);
-
-        /*
-         * Creación del objeto que contiene tanto los datos a firmar como la
-         * configuración del tipo de firma
-         */
-        DataToSign dataToSign = createDataToSign();
-
-        /*
-         * Creación del objeto encargado de realizar la firma
-         */
-        FirmaXML firma = new FirmaXML();
-
-        // Firmamos el documento
-        Document docSigned = null;
-        try {
-            Object[] res = firma.signFile(certificate, dataToSign, privateKey, provider);
-            docSigned = (Document) res[0];
-        } catch (Exception ex) {
-            System.err.println("Error realizando la firma");
-            ex.printStackTrace();
-            return;
-        }
-
-        // Guardamos la firma a un fichero en el home del usuario
-        String filePath = OUTPUT_DIRECTORY + File.separatorChar + getSignatureFileName();
-        System.out.println("Firma salvada en en: " + filePath);
-        saveDocumentToFile(docSigned, getSignatureFileName());
+        byte[] decoded = Base64.decodeBase64(pkcs12_password.getBytes());
+        String decodedString = new String(decoded);
+        //PKCS12_RESOURCE = arch;
+        PKCS12_PASSWORD = decodedString;
     }
 
-    /**
-     * <p>
-     * Crea el objeto DataToSign que contiene toda la información de la firma
-     * que se desea realizar. Todas las implementaciones deberán proporcionar
-     * una implementación de este método
-     * </p>
-     *
-     * @return El objeto DataToSign que contiene toda la información de la firma
-     * a realizar
-     */
+    public GenericXMLSignature(String key) {
+        InputStream arch = null;
+        try{
+            arch = new FileInputStream(key);
+        } catch(FileNotFoundException ex){
+            Logger.getLogger(com.creapption.quickf.xades.GenericXMLSignature.class.getName()).log(Level.SEVERE, (String)null, ex);
+        }
+        //PKCS12_RESOURCE = arch;
+    }
+
+    protected Document execute() {
+        IPKStoreManager storeManager = this.getPKStoreManager();
+        if (storeManager == null) {
+            System.err.println("El gestor de claves no se ha obtenido correctamente.");
+            return null;
+        } else {
+            X509Certificate certificate = this.getFirstCertificate(storeManager);
+            if (certificate == null) {
+                System.err.println("No existe ningún certificado para firmar.");
+                return null;
+            } else {
+                PrivateKey privateKey;
+                try {
+                    privateKey = storeManager.getPrivateKey(certificate);
+                } catch (CertStoreException var10) {
+                    System.err.println("Error al acceder al almacén.");
+                    return null;
+                }
+
+                Provider provider = storeManager.getProvider(certificate);
+                DataToSign dataToSign = this.createDataToSign();
+                FirmaXML firma = new FirmaXML();
+                try {
+                    Object[] res = firma.signFile(certificate, dataToSign, privateKey, provider);
+                    return (Document)res[0];
+                } catch (Exception var9) {
+                    System.err.println("Error realizando la firma");
+                    var9.printStackTrace();
+                    return null;
+                }
+            }
+        }
+    }
+
     protected abstract DataToSign createDataToSign();
 
-    /**
-     * <p>
-     * Nombre del fichero donde se desea guardar la firma generada. Todas las
-     * implementaciones deberán proporcionar este nombre.
-     * </p>
-     *
-     * @return El nombre donde se desea guardar la firma generada
-     */
     protected abstract String getSignatureFileName();
 
-    /**
-     * <p>
-     * Escribe el documento a un fichero.
-     * </p>
-     *
-     * @param document El documento a imprmir
-     * @param pathfile El path del fichero donde se quiere escribir.
-     */
     private void saveDocumentToFile(Document document, String pathfile) {
         try {
             FileOutputStream fos = new FileOutputStream(pathfile);
             UtilidadTratarNodo.saveDocumentToOutputStream(document, fos, true);
-        } catch (FileNotFoundException e) {
-            System.err.println("Error al salvar el documento");
-            e.printStackTrace();
+        } catch (FileNotFoundException var4) {
+            System.err.println("Error al guardar el documento");
+            var4.printStackTrace();
             System.exit(-1);
         }
+
     }
 
-    /**
-     * <p>
-     * Escribe el documento a un fichero. Esta implementacion es insegura ya que
-     * dependiendo del gestor de transformadas el contenido podría ser alterado,
-     * con lo que el XML escrito no sería correcto desde el punto de vista de
-     * validez de la firma.
-     * </p>
-     *
-     * @param document El documento a imprmir
-     * @param pathfile El path del fichero donde se quiere escribir.
-     */
-    @SuppressWarnings("unused")
     private void saveDocumentToFileUnsafeMode(Document document, String pathfile) {
         TransformerFactory tfactory = TransformerFactory.newInstance();
-        Transformer serializer;
-        try {
-            serializer = tfactory.newTransformer();
 
+        try {
+            Transformer serializer = tfactory.newTransformer();
             serializer.transform(new DOMSource(document), new StreamResult(new File(pathfile)));
-        } catch (TransformerException e) {
-            System.err.println("Error al salvar el documento");
-            e.printStackTrace();
+        } catch (TransformerException var5) {
+            System.err.println("Error al guardar el documento");
+            var5.printStackTrace();
             System.exit(-1);
         }
+
     }
 
-    /**
-     * <p>
-     * Devuelve el <code>Document</code> correspondiente al
-     * <code>resource</code> pasado como parámetro
-     * </p>
-     *
-     * @param resource El recurso que se desea obtener
-     * @return El <code>Document</code> asociado al <code>resource</code>
-     */
     protected Document getDocument(String resource) {
         Document doc = null;
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
+
         try {
             doc = dbf.newDocumentBuilder().parse(this.getClass().getResourceAsStream(resource));
-        } catch (ParserConfigurationException ex) {
+        } catch (ParserConfigurationException var5) {
             System.err.println("Error al parsear el documento");
-            ex.printStackTrace();
+            var5.printStackTrace();
             System.exit(-1);
-        } catch (SAXException ex) {
+        } catch (SAXException var6) {
             System.err.println("Error al parsear el documento");
-            ex.printStackTrace();
+            var6.printStackTrace();
             System.exit(-1);
-        } catch (IOException ex) {
+        } catch (IOException var7) {
             System.err.println("Error al parsear el documento");
-            ex.printStackTrace();
+            var7.printStackTrace();
             System.exit(-1);
-        } catch (IllegalArgumentException ex) {
+        } catch (IllegalArgumentException var8) {
             System.err.println("Error al parsear el documento");
-            ex.printStackTrace();
+            var8.printStackTrace();
             System.exit(-1);
         }
+
         return doc;
     }
 
-    /**
-     * <p>
-     * Devuelve el contenido del documento XML
-     * correspondiente al <code>resource</code> pasado como parámetro
-     * </p> como un <code>String</code>
-     *
-     * @param resource El recurso que se desea obtener
-     * @return El contenido del documento XML como un <code>String</code>
-     */
     protected String getDocumentAsString(String resource) {
-        Document doc = getDocument(resource);
+        Document doc = this.getDocument(resource);
         TransformerFactory tfactory = TransformerFactory.newInstance();
-        Transformer serializer;
         StringWriter stringWriter = new StringWriter();
+
         try {
-            serializer = tfactory.newTransformer();
+            Transformer serializer = tfactory.newTransformer();
             serializer.transform(new DOMSource(doc), new StreamResult(stringWriter));
-        } catch (TransformerException e) {
+        } catch (TransformerException var6) {
             System.err.println("Error al imprimir el documento");
-            e.printStackTrace();
+            var6.printStackTrace();
             System.exit(-1);
         }
 
         return stringWriter.toString();
     }
 
-    /**
-     * <p>
-     * Devuelve el gestor de claves que se va a utilizar
-     * </p>
-     *
-     * @return El gestor de claves que se va a utilizar</p>
-     */
     private IPKStoreManager getPKStoreManager() {
         IPKStoreManager storeManager = null;
+
         try {
             KeyStore ks = KeyStore.getInstance("PKCS12");
             ks.load(this.getClass().getResourceAsStream(PKCS12_RESOURCE), PKCS12_PASSWORD.toCharArray());
             storeManager = new KSStore(ks, new PassStoreKS(PKCS12_PASSWORD));
-        } catch (KeyStoreException ex) {
+        } catch (KeyStoreException var3) {
             System.err.println("No se puede generar KeyStore PKCS12");
-            ex.printStackTrace();
+            var3.printStackTrace();
             System.exit(-1);
-        } catch (NoSuchAlgorithmException ex) {
+        } catch (NoSuchAlgorithmException var4) {
             System.err.println("No se puede generar KeyStore PKCS12");
-            ex.printStackTrace();
+            var4.printStackTrace();
             System.exit(-1);
-        } catch (CertificateException ex) {
+        } catch (CertificateException var5) {
             System.err.println("No se puede generar KeyStore PKCS12");
-            ex.printStackTrace();
+            var5.printStackTrace();
             System.exit(-1);
-        } catch (IOException ex) {
+        } catch (IOException var6) {
             System.err.println("No se puede generar KeyStore PKCS12");
-            ex.printStackTrace();
+            var6.printStackTrace();
             System.exit(-1);
         }
+
         return storeManager;
     }
 
-    /**
-     * <p>
-     * Recupera el primero de los certificados del almacén.
-     * </p>
-     *
-     * @param storeManager Interfaz de acceso al almacén
-     * @return Primer certificado disponible en el almacén
-     */
-    private X509Certificate getFirstCertificate(
-            final IPKStoreManager storeManager) {
+    private X509Certificate getFirstCertificate(IPKStoreManager storeManager) {
         List<X509Certificate> certs = null;
+
         try {
             certs = storeManager.getSignCertificates();
-        } catch (CertStoreException ex) {
+        } catch (CertStoreException var5) {
             System.err.println("Fallo obteniendo listado de certificados");
             System.exit(-1);
         }
-        if ((certs == null) || (certs.size() == 0)) {
+
+        if (certs == null || certs.size() == 0) {
             System.err.println("Lista de certificados vacía");
             System.exit(-1);
         }
 
-        X509Certificate certificate = certs.get(0);
-        return certificate;
-    }
+        Iterator i$ = certs.iterator();
 
+        X509Certificate cert;
+        do {
+            if (!i$.hasNext()) {
+                X509Certificate certificate = (X509Certificate)certs.get(0);
+                return certificate;
+            }
+
+            cert = (X509Certificate)i$.next();
+        } while(!cert.getKeyUsage()[0]);
+
+        return cert;
+    }
 }
