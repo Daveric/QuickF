@@ -21,7 +21,6 @@ dependencies {
     implementation 'com.sun.xml.bind:jaxb-core:4.0.0' // new
     implementation 'com.sun.xml.bind:jaxb-impl:4.0.0' // new
     implementation 'org.glassfish.jaxb:jaxb-runtime:2.4.0-b180830.0438'
-    implementation 'com.googlecode.xades4j:xades4j:2.2.0'
     implementation 'jakarta.activation:jakarta.activation-api:2.1.0' // new
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'org.springframework.boot:spring-boot-starter-test'

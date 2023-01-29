@@ -56,8 +56,10 @@ public class XAdESDocumentSigner {
 
         //sign the xml
         var signedDocument = outputPath +"signedDocument.xml";
-        var signature = new XAdESBESSignature("/documentToSign.xml", keyStorePath);
+        var signature = new XAdESBESSignature(documentToSign, keyStorePath, password);
         var result = signature.execute();
+
+        //create outputFile
         outputDocument(result, signedDocument);
         return signedDocument;
     }

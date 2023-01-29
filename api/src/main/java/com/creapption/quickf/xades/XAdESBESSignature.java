@@ -35,11 +35,6 @@ public class XAdESBESSignature extends GenericXMLSignature {
         resourceToSign = fileToSign;
     }
 
-    public XAdESBESSignature (String fileToSign, String key){
-        super(key);
-        resourceToSign = fileToSign;
-    }
-
     @Override
     protected DataToSign createDataToSign() {
         DataToSign dataToSign = new DataToSign();
