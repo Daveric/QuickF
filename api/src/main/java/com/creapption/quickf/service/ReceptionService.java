@@ -4,35 +4,38 @@ import com.creapption.quickf.pojo.Factura;
 import com.creapption.quickf.util.Common;
 import com.creapption.quickf.util.OSValidator;
 import com.creapption.quickf.util.UniqueAccessKey;
-import com.creapption.quickf.util.XadesSignDoc;
+import com.creapption.quickf.xades.XadesDocumentSigner;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.nio.file.Paths;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 @Service("receptionService")
-public class ReceptionService {  
-    private static String pathToFilePlaceholder = OSValidator.isWindows()?"%sapi%ssrc%smain%sresources%s":"%ssrc%smain%sresources%s";
-    private static String path = String.format("%s%s", Paths.get("").toAbsolutePath(),
+public class ReceptionService {
+    private static final String pathToFilePlaceholder = OSValidator.isWindows()?"%sapi%ssrc%smain%sresources%s":"%ssrc%smain%sresources%s";
+    private static final String path = String.format("%s%s", Paths.get("").toAbsolutePath(),
             String.format(pathToFilePlaceholder, File.separator,
                     File.separator, File.separator,
-                    File.separator, File.separator));   
-    
-    @Value("${BILL_ENVIROMENT_TYPE}")
-    private String billEnviromentType;
+                    File.separator, File.separator));
 
-    @Value("${SIGNFILENAME}")
-    private String signFileName;
+    @Value("${BILL_ENVIRONMENT_TYPE}")
+    private String billEnvironmentType;
+
+    @Value("${SIGNATURE_FILENAME}")
+    private String signatureFileName;
+
+    @Value("${KEY_STORE_PASSWORD}")
+    private String keyStorePassword;
 
     /**
      * Sending Bill to Reception
      */
-    public String sendBillToReception(Factura bill, String password) {
+    public String sendBillToReception(Factura bill) {
         // calculating Unique access key from bill
         var accessKey = new UniqueAccessKey(bill);
-        accessKey.setIssueType(billEnviromentType);
+        accessKey.setIssueType(billEnvironmentType);
         String uniqueAccessKey = accessKey.generateKey();
 
         // setting the unique access key to the bill itself
@@ -40,14 +43,18 @@ public class ReceptionService {
 
         // convert bill to xml
         var xmlFileToSign = Common.convertClassToXML(bill);
+        var keyStorePath = path + signatureFileName;
 
-        //initiliaze the signer XadesSignDoc
-        var xadesBes = new XadesSignDoc(path + signFileName, password, xmlFileToSign);
+        //initialize the signer XAdESSignDoc
+        var xAdESBes = new XadesDocumentSigner(keyStorePath, keyStorePassword, xmlFileToSign);
         try {
             // sign the xml and save into a file
-            xadesBes.signBes(path + "document.xml");
+            var signedDocument = xAdESBes.signBes(path);
+            System.out.println("fileSigned:" + signedDocument);
 
-            return "Document signed and saved!";
+            //transforming the file into bytes and base64
+            var outputToServer = XadesDocumentSigner.transformFileToByte(signedDocument);
+            return String.format("Document signed and saved! \nBase64 for Server:%s", outputToServer);
         } catch (Exception e) {
             return e.getMessage();
         }

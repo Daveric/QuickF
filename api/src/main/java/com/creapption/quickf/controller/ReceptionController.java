@@ -16,12 +16,9 @@ public class ReceptionController {
     @Autowired
     private ReceptionService receptionService;
 
-    @Value("${PASSWORD}")
-    private String password;
-
     @PostMapping("/reception")
     public ResponseEntity<String> receptionDocuments(@RequestBody Factura bill) {
-        var response = receptionService.sendBillToReception(bill, password);
+        var response = receptionService.sendBillToReception(bill);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
