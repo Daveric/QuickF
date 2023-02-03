@@ -23,7 +23,7 @@ public class UniqueAccessKey {
     protected String issueDate;
     protected String billingType;
     protected String ruc;
-    protected String enviromentType;
+    protected String environmentType;
     protected String serie;
     protected String billingSequential;
     protected String issueType;
@@ -41,9 +41,10 @@ public class UniqueAccessKey {
 
         // init all the required properties
         setIssueDate(issueDate);
+
         setBillingType(bill.getInfoTributaria().getCodDoc());
         setRuc(bill.getInfoTributaria().getRuc());
-        setEnviromentType(bill.getInfoTributaria().getAmbiente());
+        setEnvironmentType(bill.getInfoTributaria().getAmbiente());
         setSerie(bill.getInfoTributaria().getEstab() + bill.getInfoTributaria().getPtoEmi());
         setBillingSequential(bill.getInfoTributaria().getSecuencial());
     }
@@ -57,7 +58,7 @@ public class UniqueAccessKey {
     public String generateKey() {        
         //calculating the unique codeNumber for bills (radom number of 8 digits)
         var codeNumberForBill = generateCodeNumber();
-        String accessKey = String.format("%s%s%s%s%s%s%s%s", issueDate, billingType, ruc, enviromentType, serie,
+        String accessKey = String.format("%s%s%s%s%s%s%s%s", issueDate, billingType, ruc, environmentType, serie,
                 billingSequential, codeNumberForBill, issueType);
         return setVerifierDigit(accessKey);
     }
@@ -88,8 +89,9 @@ public class UniqueAccessKey {
             // the limit value is 7 according to spec
             if (factor == limitWeightedCheckFactor) {
                 factor = weightedCheckFactor;
+            } else {
+                factor += 1;
             }
-            factor += 1;
         }
         var result = modul11 - (sum % modul11);
         // we calculate a different digit result for 11 and 10
@@ -167,24 +169,24 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Gets the enviroment type
+     * Gets the environment type
      *
      * @return
      */
-    public String getEnviromentType() {
-        return enviromentType;
+    public String getEnvironmentType() {
+        return environmentType;
     }
 
     /**
      * Sets the enviroment type (production or testing) (1 digit)
      *
-     * @param enviromentType
+     * @param environmentType
      */
-    public void setEnviromentType(String enviromentType) {
-        if (enviromentType.length() != digitsForEnvType) {
+    public void setEnvironmentType(String environmentType) {
+        if (environmentType.length() != digitsForEnvType) {
             throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
-        this.enviromentType = enviromentType;
+        this.environmentType = environmentType;
     }
 
     /**

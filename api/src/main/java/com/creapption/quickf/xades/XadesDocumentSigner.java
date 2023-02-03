@@ -1,103 +1,102 @@
 package com.creapption.quickf.xades;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import javax.xml.bind.DatatypeConverter;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.io.StringReader;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class XAdESDocumentSigner {
-    // #region Properties
-    protected static String xmlObject;
-    protected static String keyStorePath;
-    protected static String password;
+public class XadesDocumentSigner {
 
+    private final String ERROR_DOC_PARSE= "Error al parsear el documento";
+
+
+    // #region Properties
+    protected String xmlObject;
+    protected String keyStorePath;
+    protected String keyStorePassword;
     // #endregion
 
     /**
      * Constructor XAdESSignDoc - Signing documents with XAdES method.
      * Currently Bes method only supported
      * 
-     * @param signaturePath
-     * @param signaturePassword
-     * @param xmlObjectToSign
+     * @param keyStorePath - path to the key
+     * @param keyStorePassword - password to the key
+     * @param xmlObjectToSign - xmlObject in memmory to sign
      */
-    public XAdESDocumentSigner(String signaturePath, String signaturePassword, String xmlObjectToSign) {
+    public XadesDocumentSigner(String keyStorePath, String keyStorePassword, String xmlObjectToSign) {
         super();
         xmlObject = xmlObjectToSign;
-        keyStorePath = signaturePath;
-        password = signaturePassword;
+        this.keyStorePath = keyStorePath;
+        this.keyStorePassword = keyStorePassword;
     }
 
     /**
      * Sign xml documents with XAdESBes method
      * 
-     * @throws Exception
+     * @throws Exception ex
      */
     public String signBes(String outputPath) throws Exception {
-        // Transforming the xml object string into xmlFile
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        InputSource is = new InputSource(new StringReader(xmlObject));
-        Document doc = builder.parse(is);
-        // generates the xml
-        var documentToSign = outputPath + "documentToSign.xml";
-        outputDocument(doc, documentToSign);
+        Document doc = getDocument();
 
         //sign the xml
-        var signedDocument = outputPath +"signedDocument.xml";
-        var signature = new XAdESBESSignature(documentToSign, keyStorePath, password);
+        var signedDocumentPath = outputPath +"signedDocument.xml";
+        var signature = new XadesBesSignature(doc, keyStorePath, keyStorePassword);
         var result = signature.execute();
 
         //create outputFile
-        outputDocument(result, signedDocument);
-        return signedDocument;
+        saveDocumentToFile(result, signedDocumentPath);
+        return signedDocumentPath;
+    }
+
+    /**
+     * Transforming the xml object string into Document
+     * @return Document
+     */
+    private Document getDocument() {
+        Document doc = null;
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
+
+        try {
+            InputSource is = new InputSource(new StringReader(xmlObject));
+            doc = factory.newDocumentBuilder().parse(is);
+        } catch (ParserConfigurationException | SAXException | IOException | IllegalArgumentException ex) {
+            System.err.println(ERROR_DOC_PARSE);
+            ex.printStackTrace();
+        }
+        return doc;
     }
 
     /**
      * Generates an output xml file with a specific pathFileName
      * 
-     * @param doc
-     * @param pathFileName
-     * @throws Exception
+     * @param doc Document
+     * @param pathFileName String
+     * @throws Exception any
      */
-    protected static void outputDocument(Document doc, String pathFileName) throws Exception {
-        FileOutputStream out = new FileOutputStream(pathFileName);
-        try {
-            outputDOM(doc, out);
-        } finally {
-            out.close();
+    protected static void saveDocumentToFile(Document doc, String pathFileName) throws Exception {
+        try (FileOutputStream out = new FileOutputStream(pathFileName)) {
+            TransformerFactory tf = TransformerFactory.newInstance();
+            tf.newTransformer().transform(
+                    new DOMSource(doc),
+                    new StreamResult(out));
         }
     }
 
     /**
-     * Executes the transformer from doc to OutputStream
-     * 
-     * @param dom
-     * @param os
-     * @throws Exception
-     */
-    protected static void outputDOM(Node dom, OutputStream os) throws Exception {
-        TransformerFactory tf = TransformerFactory.newInstance();
-        tf.newTransformer().transform(
-                new DOMSource(dom),
-                new StreamResult(os));
-    }
-
-    /**
      * Transforms a file to Base64Binary
-     * @param filePath
-     * @throws Exception
+     * @param filePath String
+     * @throws Exception ex
      */
     public static String transformFileToByte(String filePath) throws Exception {
         var fileContent = Files.readAllBytes(Path.of(filePath));

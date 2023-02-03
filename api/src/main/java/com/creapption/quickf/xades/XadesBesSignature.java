@@ -26,13 +26,13 @@ import org.w3c.dom.Document;
 
 import java.net.URI;
 
-public class XAdESBESSignature extends GenericXMLSignature {
+public class XadesBesSignature extends GenericXMLSignature {
 
-    private String resourceToSign;
+    private Document documentToSign;
 
-    public XAdESBESSignature(String fileToSign, String key, String password){
+    public XadesBesSignature(Document documentToSign, String key, String password){
         super(key, password);
-        resourceToSign = fileToSign;
+        this.documentToSign = documentToSign;
     }
 
     @Override
@@ -43,20 +43,8 @@ public class XAdESBESSignature extends GenericXMLSignature {
         dataToSign.setXMLEncoding("UTF-8");
         dataToSign.setEnveloped(true);
         dataToSign.addObject(new ObjectToSign(new InternObjectToSign("comprobante"), "contenido comprobante", (ObjectIdentifier)null, "text/xml", (URI)null));
-        Document docToSign = this.getDocument(this.resourceToSign);
+        Document docToSign = documentToSign;
         dataToSign.setDocument(docToSign);
         return dataToSign;
-    }
-
-    protected String getSignatureFileName() {
-        return this.resourceToSign;
-    }
-
-    public String getResourceToSign() {
-        return this.resourceToSign;
-    }
-
-    public void setResourceToSign(String resourceToSign) {
-        this.resourceToSign = resourceToSign;
     }
 }
