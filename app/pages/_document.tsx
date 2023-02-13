@@ -4,7 +4,7 @@ export default function Document() {
   return (
     <Html>
       <Head>
-        <meta name="application-name" content="QuickF" />
+        <meta name="application-name" content="Quick Facturacion" />
         <meta
           name="description"
           content="Electronic Billing"
