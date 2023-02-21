@@ -16,9 +16,6 @@ import java.nio.file.Path;
 
 public class XadesDocumentSigner {
 
-    private final String ERROR_DOC_PARSE= "Error al parsear el documento";
-
-
     // #region Properties
     protected String xmlObject;
     protected String keyStorePath;
@@ -27,11 +24,11 @@ public class XadesDocumentSigner {
 
     /**
      * Constructor XAdESSignDoc - Signing documents with XAdES method.
-     * Currently Bes method only supported
+     * Currently, Bes method only supported
      * 
      * @param keyStorePath - path to the key
      * @param keyStorePassword - password to the key
-     * @param xmlObjectToSign - xmlObject in memmory to sign
+     * @param xmlObjectToSign - xmlObject in memory to sign
      */
     public XadesDocumentSigner(String keyStorePath, String keyStorePassword, String xmlObjectToSign) {
         super();
@@ -42,10 +39,9 @@ public class XadesDocumentSigner {
 
     /**
      * Sign xml documents with XAdESBes method
-     * 
-     * @throws Exception ex
+     *
      */
-    public String signBes(String outputPath) throws Exception {
+    public String signBes(String outputPath) {
         Document doc = getDocument();
 
         //sign the xml
@@ -53,7 +49,7 @@ public class XadesDocumentSigner {
         var signature = new XadesBesSignature(doc, keyStorePath, keyStorePassword);
         var result = signature.execute();
 
-        //create outputFile
+        //save
         saveDocumentToFile(result, signedDocumentPath);
         return signedDocumentPath;
     }
@@ -70,9 +66,10 @@ public class XadesDocumentSigner {
         try {
             InputSource is = new InputSource(new StringReader(xmlObject));
             doc = factory.newDocumentBuilder().parse(is);
-        } catch (ParserConfigurationException | SAXException | IOException | IllegalArgumentException ex) {
+        } catch (ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
+            String ERROR_DOC_PARSE = "Error al parsear el documento";
             System.err.println(ERROR_DOC_PARSE);
-            ex.printStackTrace();
+            e.printStackTrace();
         }
         return doc;
     }
@@ -82,24 +79,18 @@ public class XadesDocumentSigner {
      * 
      * @param doc Document
      * @param pathFileName String
-     * @throws Exception any
      */
-    protected static void saveDocumentToFile(Document doc, String pathFileName) throws Exception {
+    protected static void saveDocumentToFile(Document doc, String pathFileName){
         try (FileOutputStream out = new FileOutputStream(pathFileName)) {
             TransformerFactory tf = TransformerFactory.newInstance();
             tf.newTransformer().transform(
                     new DOMSource(doc),
                     new StreamResult(out));
         }
-    }
-
-    /**
-     * Transforms a file to Base64Binary
-     * @param filePath String
-     * @throws Exception ex
-     */
-    public static String transformFileToByte(String filePath) throws Exception {
-        var fileContent = Files.readAllBytes(Path.of(filePath));
-        return DatatypeConverter.printBase64Binary(fileContent);
+        catch (Exception e){
+            String ERROR_SAVING_DOC = "Error al guardar el documento";
+            System.err.println(ERROR_SAVING_DOC);
+            e.printStackTrace();
+        }
     }
 }

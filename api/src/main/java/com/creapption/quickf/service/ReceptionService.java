@@ -1,16 +1,18 @@
 package com.creapption.quickf.service;
 
+import com.creapption.quickf.model.Response;
 import com.creapption.quickf.pojo.Factura;
+import com.creapption.quickf.sri.RecepcionComprobantesOfflineService;
 import com.creapption.quickf.util.Common;
+import com.creapption.quickf.util.Constants;
 import com.creapption.quickf.util.OSValidator;
 import com.creapption.quickf.util.UniqueAccessKey;
 import com.creapption.quickf.xades.XadesDocumentSigner;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.nio.file.Paths;
-
-import org.springframework.beans.factory.annotation.Value;
 
 @Service("receptionService")
 public class ReceptionService {
@@ -32,7 +34,7 @@ public class ReceptionService {
     /**
      * Sending Bill to Reception
      */
-    public String sendBillToReception(Factura bill) {
+    public Response sendBillToReception(Factura bill) {
         // calculating Unique access key from bill
         var accessKey = new UniqueAccessKey(bill);
         accessKey.setIssueType(billEnvironmentType);
@@ -47,16 +49,30 @@ public class ReceptionService {
 
         //initialize the signer XAdESSignDoc
         var xAdESBes = new XadesDocumentSigner(keyStorePath, keyStorePassword, xmlFileToSign);
-        try {
-            // sign the xml and save into a file
-            var signedDocument = xAdESBes.signBes(path);
-            System.out.println("fileSigned:" + signedDocument);
+        // sign the xml and save into a file
+        var signedDocument = xAdESBes.signBes(path);
+        System.out.println("Document Signed!, check path:" + signedDocument);
 
-            //transforming the file into bytes and base64
-            var outputToServer = XadesDocumentSigner.transformFileToByte(signedDocument);
-            return String.format("Document signed and saved! \nBase64 for Server:%s", outputToServer);
-        } catch (Exception e) {
-            return e.getMessage();
+        var xmlBinaryToSend = Common.filePathToByteArray(signedDocument);
+
+        //SRI service
+        try {
+            var service = new RecepcionComprobantesOfflineService();
+            var port = service.getRecepcionComprobantesOfflinePort();
+            var respuestaSolicitud = port.validarComprobante(xmlBinaryToSend);
+            return new Response(respuestaSolicitud.getEstado());
+        }
+        catch (Exception ex){
+            return new Response(Constants.SRI_RECEPTION_ERROR);
         }
     }
+
+    /**
+     * Gets the authorization response from the backend service from SRI
+     * @return String
+     */
+    private String getAuthorization(String accessKey){
+        return "";
+    }
+
 }

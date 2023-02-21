@@ -41,8 +41,9 @@ public abstract class GenericXMLSignature {
                 PrivateKey privateKey;
                 try {
                     privateKey = storeManager.getPrivateKey(certificate);
-                } catch (CertStoreException var10) {
+                } catch (CertStoreException ex) {
                     System.err.println("Error al acceder al almacén.");
+                    ex.printStackTrace();
                     return null;
                 }
 
@@ -52,9 +53,9 @@ public abstract class GenericXMLSignature {
                 try {
                     Object[] res = firma.signFile(certificate, dataToSign, privateKey, provider);
                     return (Document) res[0];
-                } catch (Exception var9) {
+                } catch (Exception ex) {
                     System.err.println("Error realizando la firma");
-                    var9.printStackTrace();
+                    ex.printStackTrace();
                     return null;
                 }
             }
@@ -84,8 +85,9 @@ public abstract class GenericXMLSignature {
 
         try {
             certs = storeManager.getSignCertificates();
-        } catch (CertStoreException var5) {
+        } catch (CertStoreException ex) {
             System.err.println("Fallo obteniendo listado de certificados");
+            ex.printStackTrace();
         }
 
         if (certs == null || certs.size() == 0) {
@@ -104,6 +106,7 @@ public abstract class GenericXMLSignature {
             } while (!cert.getKeyUsage()[0]);
         } catch (Exception ex) {
             System.err.println("Error al leer certificado");
+            ex.printStackTrace();
         }
 
         return cert;

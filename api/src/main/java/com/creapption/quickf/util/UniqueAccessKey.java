@@ -6,14 +6,11 @@ import com.creapption.quickf.pojo.Factura;
 
 public class UniqueAccessKey {
     // #region Constants
-    static final int weightedCheckFactor = 2;
-    static final int limitWeightedCheckFactor = 7;
-    static final int modul11 = 11; // the number for the module digit calculation
     static final int digitsForIssueDate = 8;
     static final int digitsForBillingType = 2;
     static final int digitsForRuc = 13;
     static final int digitsForEnvType = 1;
-    static final int digitsForSerie = 6;
+    static final int digitsForSequence = 6;
     static final int digitsForBillingNumber = 9;
     static final int digitsForIssueType = 1;
     static final int digitsForUniqueCode = 8;
@@ -24,14 +21,14 @@ public class UniqueAccessKey {
     protected String billingType;
     protected String ruc;
     protected String environmentType;
-    protected String serie;
+    protected String sequence;
     protected String billingSequential;
     protected String issueType;
 
     /**
      * Constructor for UniqueAccessKey
      * 
-     * @param bill
+     * @param bill Factura class
      */
     public UniqueAccessKey(Factura bill) {
         super();
@@ -45,7 +42,7 @@ public class UniqueAccessKey {
         setBillingType(bill.getInfoTributaria().getCodDoc());
         setRuc(bill.getInfoTributaria().getRuc());
         setEnvironmentType(bill.getInfoTributaria().getAmbiente());
-        setSerie(bill.getInfoTributaria().getEstab() + bill.getInfoTributaria().getPtoEmi());
+        setSequence(bill.getInfoTributaria().getEstab() + bill.getInfoTributaria().getPtoEmi());
         setBillingSequential(bill.getInfoTributaria().getSecuencial());
     }
 
@@ -58,7 +55,7 @@ public class UniqueAccessKey {
     public String generateKey() {        
         //calculating the unique codeNumber for bills (radom number of 8 digits)
         var codeNumberForBill = generateCodeNumber();
-        String accessKey = String.format("%s%s%s%s%s%s%s%s", issueDate, billingType, ruc, environmentType, serie,
+        String accessKey = String.format("%s%s%s%s%s%s%s%s", issueDate, billingType, ruc, environmentType, sequence,
                 billingSequential, codeNumberForBill, issueType);
         return setVerifierDigit(accessKey);
     }
@@ -77,30 +74,11 @@ public class UniqueAccessKey {
     /**
      * Sets the last Verifier digit for the unique access key.
      * 
-     * @return 
+     * @return String
      */
     private static String setVerifierDigit(String accessKey) {
-        int sum = 0, factor = weightedCheckFactor;
-        var key = accessKey.toCharArray();
-        // we start the calculation from the end
-        for (var i = key.length - 1; i > -1; i--) {
-            var c = key[i];
-            sum = sum + Integer.parseInt(String.valueOf(c)) * factor;
-            // the limit value is 7 according to spec
-            if (factor == limitWeightedCheckFactor) {
-                factor = weightedCheckFactor;
-            } else {
-                factor += 1;
-            }
-        }
-        var result = modul11 - (sum % modul11);
-        // we calculate a different digit result for 11 and 10
-        if (result == 11) {
-            result = 0;
-        } else if (result == 10) {
-            result = 1;
-        }
-        return accessKey + result;
+        var module11 = Common.getModule11(accessKey);
+        return accessKey + module11;
     }
 
     // #regionProperties
@@ -108,7 +86,7 @@ public class UniqueAccessKey {
     /**
      * Gets the issue date for the bill
      *
-     * @return
+     * @return String
      */
     public String getIssueDate() {
         return issueDate;
@@ -117,7 +95,7 @@ public class UniqueAccessKey {
     /**
      * Sets the issue date for the bill (8 digits)
      *
-     * @param issueDate
+     * @param issueDate String
      */
     public void setIssueDate(String issueDate) {
         if (issueDate.length() != digitsForIssueDate) {
@@ -129,7 +107,7 @@ public class UniqueAccessKey {
     /**
      * Gets the billing type
      *
-     * @return
+     * @return String
      */
     public String getBillingType() {
         return billingType;
@@ -138,7 +116,7 @@ public class UniqueAccessKey {
     /**
      * Sets the billing type (2 digits)
      *
-     * @param billingType
+     * @param billingType String
      */
     public void setBillingType(String billingType) {
         if (billingType.length() != digitsForBillingType) {
@@ -150,7 +128,7 @@ public class UniqueAccessKey {
     /**
      * Gets the RUC for the contributor
      *
-     * @return
+     * @return String
      */
     public String getRuc() {
         return ruc;
@@ -159,7 +137,7 @@ public class UniqueAccessKey {
     /**
      * Sets the RUC for the contributor (13 digits)
      *
-     * @param ruc
+     * @param ruc String
      */
     public void setRuc(String ruc) {
         if (ruc.length() != digitsForRuc) {
@@ -171,7 +149,7 @@ public class UniqueAccessKey {
     /**
      * Gets the environment type
      *
-     * @return
+     * @return String
      */
     public String getEnvironmentType() {
         return environmentType;
@@ -180,7 +158,7 @@ public class UniqueAccessKey {
     /**
      * Sets the enviroment type (production or testing) (1 digit)
      *
-     * @param environmentType
+     * @param environmentType String
      */
     public void setEnvironmentType(String environmentType) {
         if (environmentType.length() != digitsForEnvType) {
@@ -190,25 +168,24 @@ public class UniqueAccessKey {
     }
 
     /**
-     * Gets the serie for the bill
+     * Gets the sequence for the bill
      *
-     * @return
+     * @return String
      */
-    public String getSerie() {
-        return serie;
+    public String getSequence() {
+        return sequence;
     }
 
     /**
-     * Sets the serie for the bill (6 digits)
-     * branch of the stab
+     * Sets the sequence for the bill (6 digits)
      *
-     * @param serie
+     * @param sequence String
      */
-    public void setSerie(String serie) {
-        if (serie.length() != digitsForSerie) {
+    public void setSequence(String sequence) {
+        if (sequence.length() != digitsForSequence) {
             throw new IllegalArgumentException(INCORRECT_LENGTH_STRING);
         }
-        this.serie = serie;
+        this.sequence = sequence;
     }
 
     /**
@@ -221,7 +198,7 @@ public class UniqueAccessKey {
     /**
      * Sets the billing number (9 digits)
      *
-     * @param billingSequential
+     * @param billingSequential String
      */
     public void setBillingSequential(String billingSequential) {
         if (billingSequential.length() != digitsForBillingNumber) {
@@ -233,7 +210,7 @@ public class UniqueAccessKey {
     /**
      * Gets the type of emission for the bill
      *
-     * @return
+     * @return String
      */
     public String getIssueType() {
         return issueType;
@@ -242,7 +219,7 @@ public class UniqueAccessKey {
     /**
      * Sets the type of emission for the bill (1 digit)
      *
-     * @param issueType
+     * @param issueType String
      */
     public void setIssueType(String issueType) {
         if (issueType.length() != digitsForIssueType) {
