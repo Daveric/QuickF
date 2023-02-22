@@ -1,0 +1,70 @@
+{
+  "id": "comprobante",
+  "version": "1.0.0",
+  "infoTributaria": {
+    "ambiente": 1,
+    "tipoEmision": 1,
+    "razonSocial": "Brayan Omar Loayza Quito",
+    "nombreComercial": "Brayan Omar Loayza Quito",
+    "ruc": "0705867794001",
+    "claveAcceso": "**** GENERATE ****",
+    "codDoc": "01",
+    "estab": "001",
+    "ptoEmi": "004",
+    "secuencial": "000000095",
+    "dirMatriz": "14ava Sur e Decima Oeste"
+  },
+  "infoFactura": {
+    "fechaEmision": "17/02/2023",
+    "fechaHoraEmision": "2022-11-28 20:00:00",
+    "dirEstablecimiento": "Amazonas N21-147 y Roca",
+    "obligadoContabilidad": "SI",
+    "tipoIdentificacionComprador": "04",
+    "razonSocialComprador": "Mushroomsoft S.A",
+    "identificacionComprador": "1792303990001",
+    "direccionComprador": "Amazonas N21-147 y Roca",
+    "totalSinImpuestos": 2500.00,
+    "totalDescuento": 0.00,
+    "totalConImpuestos": {
+      "totalImpuesto": [
+        {
+          "codigo": 2,
+          "codigoPorcentaje": 2,
+          "baseImponible": 2500.00,
+          "valor": 300.00
+        }
+      ]
+    },
+    "propina": 0.00,
+    "importeTotal": 2800.00,
+    "moneda": "DOLAR",
+    "pagos": {
+      "pago": [
+        {
+          "formaPago": 20,
+          "total": 2800.00
+        }
+      ]
+    }
+  },
+  "detalles": {
+    "detalle": [
+      {
+        "descripcion": "Servicios Profesionales Enero",
+        "cantidad": 1,
+        "precioUnitario": 2500.00,
+        "descuento": 0.00,
+        "precioTotalSinImpuesto": 2500.00,
+        "impuestos": {
+          "impuesto": [{
+            "codigo": 2,
+            "codigoPorcentaje": 2,
+            "tarifa": 12.00,
+            "baseImponible": 2500.00,
+            "valor": 300.00
+          }]
+        }
+      }
+    ]
+  }
+}

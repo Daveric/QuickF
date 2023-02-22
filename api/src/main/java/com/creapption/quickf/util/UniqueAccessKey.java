@@ -1,7 +1,6 @@
 package com.creapption.quickf.util;
 
 import java.util.Random;
-
 import com.creapption.quickf.pojo.Factura;
 
 public class UniqueAccessKey {

@@ -15,6 +15,7 @@ import javax.xml.bind.Marshaller;
  * Define common methods.
  */
 public class Common {
+
     static final int weightedCheckFactor = 2;
     static final int maxWeightedCheckFactor = 7;
     static final int module11 = 11; // the number for the module digit calculation

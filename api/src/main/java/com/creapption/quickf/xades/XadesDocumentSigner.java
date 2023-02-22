@@ -3,16 +3,12 @@ package com.creapption.quickf.xades;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 public class XadesDocumentSigner {
 
@@ -32,7 +28,7 @@ public class XadesDocumentSigner {
      */
     public XadesDocumentSigner(String keyStorePath, String keyStorePassword, String xmlObjectToSign) {
         super();
-        xmlObject = xmlObjectToSign;
+        this.xmlObject = xmlObjectToSign;
         this.keyStorePath = keyStorePath;
         this.keyStorePassword = keyStorePassword;
     }
