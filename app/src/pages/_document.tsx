@@ -1,14 +1,11 @@
-import {Head, Html, Main, NextScript} from "next/document";
+import { Head, Html, Main, NextScript } from 'next/document';
 
 export default function Document() {
   return (
     <Html>
       <Head>
         <meta name="application-name" content="Quick Facturacion" />
-        <meta
-          name="description"
-          content="Electronic Billing"
-        />
+        <meta name="description" content="Electronic Billing" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="QuickF" />
@@ -20,13 +17,35 @@ export default function Document() {
         <meta name="theme-color" content="#000000" />
 
         <link rel="apple-touch-icon" href="images/pwa/apple-icon-180.png" />
-        <link rel="apple-touch-icon" sizes="152x152" href="images/pwa/apple-icon-152.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="images/pwa/apple-icon-167.png" />
-        <link rel="apple-touch-icon" sizes="167x167" href="images/pwa/apple-icon-180.png" />
+        <link
+          rel="apple-touch-icon"
+          sizes="152x152"
+          href="images/pwa/apple-icon-152.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="images/pwa/apple-icon-167.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="167x167"
+          href="images/pwa/apple-icon-180.png"
+        />
 
-        <link rel="icon" type="image/png" sizes="32x32" href="images/pwa/favicon-32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="images/pwa/favicon-16.png" />
-        <link rel="manifest" href="/manifest.json" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="images/pwa/favicon-32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="images/pwa/favicon-16.png"
+        />
+        <link rel="manifest" href="/app/public/manifest.json" />
 
         <link
           href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;500&display=swap"
@@ -34,9 +53,9 @@ export default function Document() {
         />
       </Head>
       <body>
-      <Main />
-      <NextScript />
+        <Main />
+        <NextScript />
       </body>
     </Html>
-  )
+  );
 }
