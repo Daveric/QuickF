@@ -37,7 +37,6 @@ public class UniqueAccessKey {
 
         // init all the required properties
         setIssueDate(issueDate);
-
         setBillingType(bill.getInfoTributaria().getCodDoc());
         setRuc(bill.getInfoTributaria().getRuc());
         setEnvironmentType(bill.getInfoTributaria().getAmbiente());

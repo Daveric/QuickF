@@ -10,6 +10,7 @@ import com.creapption.quickf.util.UniqueAccessKey;
 import com.creapption.quickf.xades.XadesDocumentSigner;
 import com.creapption.quickf.xades.validation.XMLValidator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import java.io.File;
 import java.nio.file.Paths;
@@ -36,31 +37,35 @@ public class ReceptionService {
         var accessKey = new UniqueAccessKey(bill);
         accessKey.setIssueType(billEnvironmentType);
         String uniqueAccessKey = accessKey.generateKey();
-
         // setting the unique access key to the bill itself
         bill.getInfoTributaria().setClaveAcceso(uniqueAccessKey);
-
+        String xmlFileToSign;
         // convert bill to xml
-        //FIXME: Improve try catch control about xsd validation
-        var xmlFileToSign = Common.convertClassToXML(bill);
-        try{
-            //checking bill schema
-            var schemaPath = getPathTo(schemas)+"factura_V2.1.0.xsd";
+        try {
+            xmlFileToSign = Common.convertClassToXML(bill);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return new Response(Constants.SRI_RECEPTION_ERROR, ex.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+        //validate bill schema
+        var schemaPath = getPathTo(schemas)+"factura_V2.1.0.xsd";
+        try {
             XMLValidator.validate(xmlFileToSign, schemaPath, true);
         }
-        catch(Exception ex){
-            System.err.println("Files not founded for XMlVerification");
+        catch (Exception ex){
             ex.printStackTrace();
+            return new Response(Constants.SRI_RECEPTION_ERROR, ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        var resourcesPath = getPathTo(resources);
-        var keyStorePath = resourcesPath + signatureFileName;
 
         //initialize the signer XAdESSignDoc
+        var resourcesPath = getPathTo(resources);
+        var keyStorePath = resourcesPath + signatureFileName;
         var xAdESBes = new XadesDocumentSigner(keyStorePath, keyStorePassword, xmlFileToSign);
+
         // sign the xml and save into a file
         var signedDocument = xAdESBes.signBes(resourcesPath);
         System.out.println("Document Signed!, check path:" + signedDocument);
-
         var xmlBinaryToSend = Common.filePathToByteArray(signedDocument);
 
         //SRI service
@@ -68,10 +73,11 @@ public class ReceptionService {
             var service = new RecepcionComprobantesOfflineService();
             var port = service.getRecepcionComprobantesOfflinePort();
             var respuestaSolicitud = port.validarComprobante(xmlBinaryToSend);
-            return new Response(respuestaSolicitud.getEstado());
+            return new Response(respuestaSolicitud.getEstado(), "", HttpStatus.OK);
         }
         catch (Exception ex){
-            return new Response(Constants.SRI_RECEPTION_ERROR);
+            ex.printStackTrace();
+            return new Response(Constants.SRI_RECEPTION_ERROR, ex.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -10,42 +10,52 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import static org.springframework.test.util.AssertionErrors.assertEquals;
+import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
 @SpringBootTest
 public class UniqueAccessKeyTests {
     private static final String resources = OSValidator.isWindows()?"%sapi%ssrc%smain%sresources%s":"%ssrc%smain%sresources%s";
-
+    private Factura factura;
     @Test
     void givenDigits_whenGetAccessKey_thenReturnCorrectLength(){
-        var billTestingPath = String.format("%s%s", Paths.get("").toAbsolutePath(),
-                String.format(resources, File.separator,
-                        File.separator, File.separator,
-                        File.separator, File.separator));
-        String bill;
-        try {
-            var path = Path.of(billTestingPath + "bill_testing.json");
-            bill = Files.readString(path);
-        }
-        catch (Exception ex){
-            System.err.println("There was an error reading the bill bill_testing.json");
-            ex.printStackTrace();
-            return;
-        }
-        ObjectMapper objectMapper = new ObjectMapper();
-        Factura factura;
-        try {
-            factura = objectMapper.readValue(bill, Factura.class);
-        }
-        catch (Exception ex){
-            System.err.println("There was an error mapping the Factura class from .json");
-            ex.printStackTrace();
-            return;
-        }
-        var accessKey = new UniqueAccessKey(factura);
+        mapBill();
+        var accessKey = new UniqueAccessKey(this.factura);
         accessKey.setIssueType("1");
         var key = accessKey.generateKey();
         var digitsLength = key.length();
         var expectedDigitsLength = 49;
-        assertEquals(String.format("The access key length for %s", key), digitsLength, expectedDigitsLength);
+        //checking the result length keyAccess
+        assertEquals(String.format("The access key length for %s", key), expectedDigitsLength, digitsLength);
+    }
+
+    private String readJsonBill(){
+        var billTestingPath = String.format("%s%s", Paths.get("").toAbsolutePath(),
+            String.format(resources, File.separator,
+                    File.separator, File.separator,
+                    File.separator, File.separator));
+        try {
+            var path = Path.of(billTestingPath + "bill_testing.json");
+            return Files.readString(path);
+        }
+        catch (Exception ex){
+            System.err.println("There was an error reading bill_testing.json");
+            ex.printStackTrace();
+            return "";
+        }
+    }
+
+    @Test
+    void mapBill(){
+        String bill = readJsonBill();
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+             this.factura = objectMapper.readValue(bill, Factura.class);
+        }
+        catch (Exception ex){
+            System.err.println("There was an error mapping the Factura class from .json");
+            ex.printStackTrace();
+            this.factura = null;
+        }
+        assertNotNull("The bill object is null", this.factura);
     }
 }

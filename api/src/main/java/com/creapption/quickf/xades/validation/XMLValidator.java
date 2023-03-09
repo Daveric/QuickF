@@ -1,6 +1,5 @@
 package com.creapption.quickf.xades.validation;
 
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -50,6 +49,5 @@ public class XMLValidator {
             System.out.println(xmlFile.getSystemId() + " NO es válido");
             System.out.println("Razón\t: " + ex.getLocalizedMessage());
         }
-
     }
 }

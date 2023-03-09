@@ -1,5 +1,6 @@
 package com.creapption.quickf.xades;
 
+import com.creapption.quickf.util.Constants;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -38,15 +39,15 @@ public class XadesDocumentSigner {
      *
      */
     public String signBes(String outputPath) {
-        Document doc = getDocument();
-
         //sign the xml
         var signedDocumentPath = outputPath +"signedDocument.xml";
-        var signature = new XadesBesSignature(doc, keyStorePath, keyStorePassword);
-        var result = signature.execute();
-
-        //save
-        saveDocumentToFile(result, signedDocumentPath);
+        Document doc = getDocument();
+        if (doc != null){
+            var signature = new XadesBesSignature(doc, keyStorePath, keyStorePassword);
+            var result = signature.execute();
+            //save
+            saveDocumentToFile(result, signedDocumentPath);
+        }
         return signedDocumentPath;
     }
 
@@ -55,19 +56,16 @@ public class XadesDocumentSigner {
      * @return Document
      */
     private Document getDocument() {
-        Document doc = null;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);
-
         try {
             InputSource is = new InputSource(new StringReader(xmlObject));
-            doc = factory.newDocumentBuilder().parse(is);
+            return factory.newDocumentBuilder().parse(is);
         } catch (ParserConfigurationException | SAXException | IOException | IllegalArgumentException e) {
-            String ERROR_DOC_PARSE = "Error al parsear el documento";
-            System.err.println(ERROR_DOC_PARSE);
+            System.err.println(Constants.ERROR_DOC_PARSE);
             e.printStackTrace();
         }
-        return doc;
+        return null;
     }
 
     /**
@@ -84,8 +82,7 @@ public class XadesDocumentSigner {
                     new StreamResult(out));
         }
         catch (Exception e){
-            String ERROR_SAVING_DOC = "Error al guardar el documento";
-            System.err.println(ERROR_SAVING_DOC);
+            System.err.println(Constants.ERROR_SAVING_DOC);
             e.printStackTrace();
         }
     }

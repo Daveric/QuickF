@@ -25,29 +25,23 @@ public class Common {
      * @param bill Factura class
      * @return String
      */
-    public static String convertClassToXML(Factura bill) {
-        try {
-            //Create JAXB Context
-            JAXBContext jaxbContext = JAXBContext.newInstance(Factura.class);
-            //Create Marshaller
-            Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
-            //Required formatting??
-            jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-            //Print XML String to Console
-            StringWriter sw = new StringWriter();
+    public static String convertClassToXML(Factura bill) throws JAXBException {
+        //Create JAXB Context
+        JAXBContext jaxbContext = JAXBContext.newInstance(Factura.class);
+        //Create Marshaller
+        Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
+        //Required formatting??
+        jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        //Print XML String to Console
+        StringWriter sw = new StringWriter();
 
-            //Write XML to StringWriter
-            jaxbMarshaller.marshal(bill, sw);
+        //Write XML to StringWriter
+        jaxbMarshaller.marshal(bill, sw);
 
-            //Verify XML Content
-            String xmlContent = sw.toString();
-            System.out.println(xmlContent);
-            return xmlContent;
-
-        } catch (JAXBException e) {
-            e.printStackTrace();
-            return e.getMessage();
-        }
+        //Verify XML Content
+        String xmlContent = sw.toString();
+        System.out.println(xmlContent);
+        return xmlContent;
     }
 
     /**
@@ -86,7 +80,6 @@ public class Common {
         SimpleDateFormat dateFormat = new SimpleDateFormat(pattern);
         return dateFormat.format(date);
     }
-
 
     /**
      * Transforms a filePath content to Base64Binary for SoapUI

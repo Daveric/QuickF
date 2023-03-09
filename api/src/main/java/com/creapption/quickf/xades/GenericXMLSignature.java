@@ -63,21 +63,19 @@ public abstract class GenericXMLSignature {
     }
 
     private IPKStoreManager getPKStoreManager() {
-        IPKStoreManager storeManager = null;
-
         try {
             KeyStore ks = KeyStore.getInstance("PKCS12");
             File pkcs12File = new File(PKCS12_RESOURCE);
             InputStream fis = new FileInputStream(pkcs12File);
             BufferedInputStream bis = new BufferedInputStream(fis);
             ks.load(bis, PKCS12_PASSWORD.toCharArray());
-            storeManager = new KSStore(ks, new PassStoreKS(PKCS12_PASSWORD));
+            return new KSStore(ks, new PassStoreKS(PKCS12_PASSWORD));
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException ex) {
             System.err.println("No se puede generar KeyStore PKCS12");
             ex.printStackTrace();
         }
 
-        return storeManager;
+        return null;
     }
 
     private X509Certificate getFirstCertificate(IPKStoreManager storeManager) {
