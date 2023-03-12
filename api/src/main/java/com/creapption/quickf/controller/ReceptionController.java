@@ -15,6 +15,6 @@ public class ReceptionController {
     @PostMapping("/reception")
     public ResponseEntity<Response> sendToReception(@RequestBody Factura bill) {
         var response = receptionService.sendBillToReception(bill);
-        return new ResponseEntity<>(response, response.getCodeStatus());
+        return new ResponseEntity<>(response, response.codeStatus);
     }
 }
