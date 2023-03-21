@@ -1,4 +1,4 @@
-package com.creapption.quickf.sri;
+package com.creapption.quickf.sri.reception;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;

@@ -1,9 +1,9 @@
 
-package com.creapption.quickf.sri;
+package com.creapption.quickf.sri.reception;
 
+import com.creapption.quickf.sri.Mensaje;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +45,6 @@ import java.util.List;
     "mensajes"
 })
 public class Comprobante {
-
     protected String claveAcceso;
     protected Mensajes mensajes;
 
@@ -122,32 +121,8 @@ public class Comprobante {
         "mensaje"
     })
     public static class Mensajes {
-
-        @XmlElement(namespace = "http://ec.gob.sri.ws.recepcion")
         protected List<Mensaje> mensaje;
 
-        /**
-         * Gets the value of the mensaje property.
-         * 
-         * <p>
-         * This accessor method returns a reference to the live list,
-         * not a snapshot. Therefore any modification you make to the
-         * returned list will be present inside the JAXB object.
-         * This is why there is not a <CODE>set</CODE> method for the mensaje property.
-         * 
-         * <p>
-         * For example, to add a new item, do as follows:
-         * <pre>
-         *    getMensaje().add(newItem);
-         * </pre>
-         * 
-         * 
-         * <p>
-         * Objects of the following type(s) are allowed in the list
-         * {@link Mensaje }
-         * 
-         * 
-         */
         public List<Mensaje> getMensaje() {
             if (mensaje == null) {
                 mensaje = new ArrayList<Mensaje>();

@@ -1,5 +1,7 @@
 
-package com.creapption.quickf.sri;
+package com.creapption.quickf.sri.reception;
+
+import com.creapption.quickf.sri.Mensaje;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;

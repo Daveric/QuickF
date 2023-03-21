@@ -12,4 +12,9 @@ public class Response {
         this.errorMessage = errorMessage;
         this.codeStatus = codeStatus;
     }
+
+    public Response(String message, HttpStatus codeStatus) {
+        this.message = message;
+        this.codeStatus = codeStatus;
+    }
 }

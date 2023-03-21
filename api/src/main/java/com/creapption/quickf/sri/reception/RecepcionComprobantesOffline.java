@@ -1,4 +1,4 @@
-package com.creapption.quickf.sri;
+package com.creapption.quickf.sri.reception;
 
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
@@ -18,8 +18,8 @@ import javax.xml.ws.ResponseWrapper;
 public interface RecepcionComprobantesOffline {
 
     @WebMethod
-    @RequestWrapper(localName = "validarComprobante", targetNamespace = "http://ec.gob.sri.ws.recepcion", className = "com.creapption.quickf.sri.ValidarComprobante")
-    @ResponseWrapper(localName = "validarComprobanteResponse", targetNamespace = "http://ec.gob.sri.ws.recepcion", className = "com.creapption.quickf.sri.ValidarComprobanteResponse")
+    @RequestWrapper(localName = "validarComprobante", targetNamespace = "http://ec.gob.sri.ws.recepcion", className = "com.creapption.quickf.sri.reception.ValidarComprobante")
+    @ResponseWrapper(localName = "validarComprobanteResponse", targetNamespace = "http://ec.gob.sri.ws.recepcion", className = "com.creapption.quickf.sri.reception.ValidarComprobanteResponse")
     @WebResult(name = "RespuestaRecepcionComprobante", targetNamespace = "")
     public RespuestaSolicitud validarComprobante(
 

@@ -1,5 +1,5 @@
 
-package com.creapption.quickf.sri;
+package com.creapption.quickf.sri.reception;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -122,8 +122,6 @@ public class RespuestaSolicitud {
         "comprobante"
     })
     public static class Comprobantes {
-
-        @XmlElement(namespace = "http://ec.gob.sri.ws.recepcion")
         protected List<Comprobante> comprobante;
 
         /**

@@ -2,7 +2,8 @@ package com.creapption.quickf.service;
 
 import com.creapption.quickf.model.Response;
 import com.creapption.quickf.pojo.Factura;
-import com.creapption.quickf.sri.RecepcionComprobantesOfflineService;
+import com.creapption.quickf.sri.authorization.AutorizacionComprobantesOfflineService;
+import com.creapption.quickf.sri.reception.RecepcionComprobantesOfflineService;
 import com.creapption.quickf.util.Common;
 import com.creapption.quickf.util.Constants;
 import com.creapption.quickf.util.OSValidator;
@@ -31,6 +32,7 @@ public class ReceptionService {
 
     /**
      * Sending Bill to Reception
+     * @return Response
      */
     public Response sendBillToReception(Factura bill) {
         // calculating Unique access key from bill
@@ -73,7 +75,8 @@ public class ReceptionService {
             var service = new RecepcionComprobantesOfflineService();
             var port = service.getRecepcionComprobantesOfflinePort();
             var respuestaSolicitud = port.validarComprobante(xmlBinaryToSend);
-            return new Response(respuestaSolicitud.getEstado(), "", HttpStatus.OK);
+            var message = String.format("State for: %s is %s", uniqueAccessKey, respuestaSolicitud.getEstado());
+            return new Response(message, "", HttpStatus.OK);
         }
         catch (Exception ex){
             ex.printStackTrace();

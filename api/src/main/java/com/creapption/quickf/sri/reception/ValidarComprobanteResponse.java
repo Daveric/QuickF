@@ -1,5 +1,5 @@
 
-package com.creapption.quickf.sri;
+package com.creapption.quickf.sri.reception;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
