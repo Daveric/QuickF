@@ -4,6 +4,7 @@ import styles from '../../styles/Home.module.css';
 import {
   AuthenticatedTemplate,
   UnauthenticatedTemplate,
+  useIsAuthenticated,
   useMsal,
   useMsalAuthentication,
 } from '@azure/msal-react';
@@ -12,10 +13,13 @@ import {
   InteractionType,
 } from '@azure/msal-browser';
 import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home(): JSX.Element {
   const { login, error } = useMsalAuthentication(InteractionType.Redirect);
   const { accounts, instance } = useMsal();
+  const isAuthenticated = useIsAuthenticated();
+  const router = useRouter();
 
   const handleLogout = (): void => {
     void instance.logoutRedirect();
@@ -26,6 +30,12 @@ export default function Home(): JSX.Element {
       void login(InteractionType.Redirect);
     }
   }, [error]);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      void router.push('/business/registration');
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className={styles.container}>
