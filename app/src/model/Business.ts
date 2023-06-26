@@ -1,5 +1,5 @@
 import { object, string, number } from 'yup';
-import { YupValidation } from '../common/TextConstants';
+import { YupValidation } from 'common/TextConstants';
 
 export interface Business {
   ruc: string;

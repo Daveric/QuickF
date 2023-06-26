@@ -1,12 +1,15 @@
 import type { AppProps } from 'next/app';
 import { MsalProvider } from '@azure/msal-react';
-import authProvider from '../modules/auth/AuthProvider';
-import '../../styles/globals.css';
+import 'styles/globals.css';
+import StoreProvider from 'store/StoreProvider';
+import authProvider from 'modules/auth/AuthProvider';
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <MsalProvider instance={authProvider}>
-      <Component {...pageProps} />
-    </MsalProvider>
+    <StoreProvider>
+      <MsalProvider instance={authProvider}>
+        <Component {...pageProps} />
+      </MsalProvider>
+    </StoreProvider>
   );
 }

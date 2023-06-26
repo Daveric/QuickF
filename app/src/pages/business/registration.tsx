@@ -8,11 +8,11 @@ import {
   Typography,
 } from '@mui/material';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
-import CustomPanel from '../../common/components/CustomPanel';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { type Business, validationSchema } from '../../model/Business';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { type Business, validationSchema } from 'model/Business';
+import CustomPanel from 'common/components/CustomPanel';
 
 export default function BusinessRegistration() {
   const {
