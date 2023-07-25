@@ -1,8 +1,8 @@
 {
   "name": "QuickF",
   "short_name": "QuickF",
-  "theme_color": "#1FBAA8",
-  "background_color": "#1FBAA8",
+  "theme_color": "#31B4A5",
+  "background_color": "#31B4A5",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
