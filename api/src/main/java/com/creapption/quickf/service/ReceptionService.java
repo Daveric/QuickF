@@ -2,7 +2,6 @@ package com.creapption.quickf.service;
 
 import com.creapption.quickf.model.Response;
 import com.creapption.quickf.pojo.Factura;
-import com.creapption.quickf.sri.authorization.AutorizacionComprobantesOfflineService;
 import com.creapption.quickf.sri.reception.RecepcionComprobantesOfflineService;
 import com.creapption.quickf.util.Common;
 import com.creapption.quickf.util.Constants;

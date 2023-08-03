@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 @Service("authorizationService")
 public class AuthorizationService {
 
-
     /**
      * Gets whether a bill is authorized or not
      * @return Response
