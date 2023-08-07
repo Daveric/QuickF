@@ -13,6 +13,7 @@ export interface Business {
   email: string;
   phone: string;
   pathFileP12: string;
+  adminPassword: string;
 }
 
 export const validationSchema = () => {
@@ -33,5 +34,6 @@ export const validationSchema = () => {
     email: string().email(emailValidation).required(requiredField),
     phone: string(),
     pathFileP12: string().required(requiredField),
+    adminPassword: string().required(requiredField),
   });
 };

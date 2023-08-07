@@ -12,4 +12,5 @@ public class RegistrationModel {
     public String email;
     public String phone;
     public String pathFileP12;
+    public String adminPassword;
 }

@@ -7,6 +7,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -14,8 +15,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { type Business, validationSchema } from 'model/Business';
 import CustomPanel from 'common/components/CustomPanel';
 import TopBarNavigation from 'common/layout/TopBarNavigation';
+import { observer } from 'mobx-react-lite';
+import BusinessRegistrationViewModel from 'modules/business/BusinessRegistrationViewModel';
 
-export default function BusinessRegistration() {
+function BusinessRegistration() {
   const {
     register,
     handleSubmit,
@@ -24,6 +27,8 @@ export default function BusinessRegistration() {
     watch,
     clearErrors,
   } = useForm<Business>({ resolver: yupResolver(validationSchema()) });
+  const model = new BusinessRegistrationViewModel();
+  const [isLoading, setIsLoading] = React.useState(false);
 
   useEffect(() => {
     register('pathFileP12');
@@ -36,8 +41,10 @@ export default function BusinessRegistration() {
     }
   }
 
-  const onSubmit = (data: Business) => {
-    // console.log(data);
+  const onSubmit = async (data: Business) => {
+    setIsLoading(true);
+    await model.save(data);
+    setIsLoading(false);
   };
 
   console.log('errors: ', errors);
@@ -52,18 +59,28 @@ export default function BusinessRegistration() {
         >
           <form onSubmit={handleSubmit(onSubmit)}>
             <Grid container spacing={4}>
-              <Grid item xs={12}>
-                <Grid item xs={6}>
-                  <TextField
-                    fullWidth
-                    id="ruc-id"
-                    label="RUC"
-                    variant="outlined"
-                    {...register('ruc')}
-                    helperText={errors?.ruc?.message}
-                    error={Boolean(errors?.ruc?.message)}
-                  />
-                </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  id="ruc-id"
+                  label="RUC"
+                  variant="outlined"
+                  {...register('ruc')}
+                  helperText={errors?.ruc?.message}
+                  error={Boolean(errors?.ruc?.message)}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  fullWidth
+                  id="admin-password-id"
+                  label="Clave de Administrador"
+                  variant="outlined"
+                  type="password"
+                  {...register('adminPassword')}
+                  helperText={errors?.adminPassword?.message}
+                  error={Boolean(errors?.adminPassword?.message)}
+                />
               </Grid>
               <Grid item xs={6}>
                 <TextField
@@ -196,9 +213,13 @@ export default function BusinessRegistration() {
             <Box
               sx={{ display: 'flex', justifyContent: 'flex-end', mr: 2, my: 1 }}
             >
-              <Button type="submit" variant="contained">
+              <LoadingButton
+                type="submit"
+                variant="contained"
+                loading={isLoading}
+              >
                 Guardar y Continuar
-              </Button>
+              </LoadingButton>
             </Box>
           </form>
         </CustomPanel>
@@ -206,3 +227,5 @@ export default function BusinessRegistration() {
     </>
   );
 }
+
+export default observer(BusinessRegistration);

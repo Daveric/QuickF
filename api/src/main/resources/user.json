@@ -9,5 +9,6 @@
   "obligatedAccountability": true,
   "email": "erick@acm1pt.com",
   "phone": "0007",
-  "pathFileP12": "pp12"
+  "pathFileP12": "pp12",
+  "adminPassword": "123"
 }
