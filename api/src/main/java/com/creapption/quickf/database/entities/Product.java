@@ -1,17 +1,14 @@
 package com.creapption.quickf.database.entities;
 
-import org.springframework.data.annotation.Id;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
-public class Products {
-    public Products(){
-
-    }
-
+@Entity
+public class Product {
     @Id
     @GeneratedValue
     public Long id;
-
     public String code;
     public String description;
     public Integer quantity;

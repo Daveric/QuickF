@@ -1,14 +1,10 @@
 package com.creapption.quickf.database.entities;
 
-import org.springframework.data.annotation.Id;
 import javax.persistence.*;
 import java.util.Date;
 
-public class Customers {
-    public Customers(){
-
-    }
-
+@Entity
+public class Customer {
     @Id
     @GeneratedValue
     public Long id;

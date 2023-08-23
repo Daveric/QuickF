@@ -36,6 +36,8 @@ public class DataBaseManagement {
         try {
             SqlServer sqlServer = azureResourceManager.sqlServers().getByResourceGroup(resourceGroup, dbServerName);
             sqlServer.databases().define(dbName).withSku(DatabaseSku.FREE_FREE).create();
+            // 1. set application properties
+            // 2. Hibernate run their process
             return dbName + " successfully created!";
         } catch (Exception e) {
             System.out.println(e.getMessage());
