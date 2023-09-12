@@ -1,0 +1,24 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    implementation 'com.sun.xml.bind:jaxb-impl'
+    implementation 'com.sun.xml.bind:jaxb-core'
+    implementation 'com.sun.xml.ws:jaxws-rt'
+
+    implementation "org.glassfish.jaxb:jaxb-runtime"
+    implementation 'javax.xml.bind:jaxb-api'
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api'
+    implementation 'jakarta.xml.soap:jakarta.xml.soap-api'
+    implementation 'jakarta.activation:jakarta.activation-api'
+    implementation 'jakarta.xml.ws:jakarta.xml.ws-api'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}

@@ -1,40 +1,53 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.5'
-	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id 'org.unbroken-dome.xjc' version '2.0.0'
-	id 'java'
+    id 'java'
 }
 
-group = 'com.creapption'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
-
-repositories {
-    mavenCentral()
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
-    implementation 'com.sun.xml.ws:jaxws-rt:4.0.1'
-    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0' // new
-    implementation 'com.sun.xml.bind:jaxb-core:4.0.2' // new
-    implementation 'com.sun.xml.bind:jaxb-impl:4.0.2' // new
-    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.2'
-    implementation 'jakarta.activation:jakarta.activation-api:2.1.2' // new
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'javax.jws:javax.jws-api:1.1'
-    implementation platform('com.azure:azure-sdk-bom:1.2.9')
-    implementation 'com.azure.resourcemanager:azure-resourcemanager:2.17.0'
-    implementation 'com.azure:azure-identity:1.10.0'
-    implementation 'com.microsoft.sqlserver:mssql-jdbc:12.4.0.jre11'
-    implementation 'com.azure.spring:spring-cloud-azure-dependencies:4.10.0'
-    implementation 'com.azure.spring:spring-cloud-azure-starter:4.10.0'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
+subprojects {
 
-tasks.named('test') {
-	useJUnitPlatform()
+    group = 'com.creapption'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '11'
+
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java-library'
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:2.1.9.RELEASE")
+        }
+    }
+
+    dependencies {
+        implementation 'com.sun.xml.bind:jaxb-impl:4.0.2'
+        implementation 'com.sun.xml.bind:jaxb-core:4.0.2'
+        implementation 'com.sun.xml.ws:jaxws-rt:4.0.1'
+
+        implementation "org.glassfish.jaxb:jaxb-runtime:4.0.2"
+        implementation 'jakarta.xml.ws:jakarta.xml.ws-api:4.0.0'
+        implementation 'javax.xml.bind:jaxb-api:2.4.0-b180830.0359'
+        implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+        implementation 'jakarta.xml.soap:jakarta.xml.soap-api:3.0.0'
+        implementation 'jakarta.activation:jakarta.activation-api:2.1.2'
+    }
+
+    compileJava {
+        sourceCompatibility = 11
+        targetCompatibility = 11
+    }
+
 }
