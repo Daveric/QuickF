@@ -32,4 +32,5 @@ out/
 /dist/
 /nbdist/
 /.nb-gradle/
-/master/src/main/resources/signedDocument.xml
+/customer/src/main/resources/signedDocument.xml
+/customer/src/main/resources/LOAYZA_BRAYAN.p12
