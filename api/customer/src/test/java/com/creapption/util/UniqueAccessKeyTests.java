@@ -1,6 +1,6 @@
-package com.creapption.quickf.util;
+package com.creapption.util;
 
-import com.creapption.quickf.pojo.Factura;
+import com.creapption.pojo.Factura;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,7 +14,7 @@ import static org.springframework.test.util.AssertionErrors.assertNotNull;
 
 @SpringBootTest
 public class UniqueAccessKeyTests {
-    private static final String resources = OSValidator.isWindows()?"%sapi%ssrc%smain%sresources%s":"%ssrc%smain%sresources%s";
+    private static final String resources = "%scustomer%ssrc%smain%sresources%s";
     private Factura factura;
     @Test
     void givenDigits_whenGetAccessKey_thenReturnCorrectLength(){

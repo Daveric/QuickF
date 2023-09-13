@@ -1,4 +1,4 @@
-package com.creapption.quickf;
+package com.creapption;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
